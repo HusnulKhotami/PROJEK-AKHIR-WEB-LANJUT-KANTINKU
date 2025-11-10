@@ -6,20 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('menu', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('id_pedagang');
+
+            // ✅ relasi kategori_id
+            $table->unsignedBigInteger('kategori_id');
+            $table->foreign('kategori_id')->references('id')->on('kategori_menu')->onDelete('cascade');
+
+            $table->string('nama', 100);
+            $table->text('deskripsi')->nullable();
+            $table->integer('harga');
+            $table->integer('stok');
+            $table->string('gambar_url')->nullable();
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('menu');
