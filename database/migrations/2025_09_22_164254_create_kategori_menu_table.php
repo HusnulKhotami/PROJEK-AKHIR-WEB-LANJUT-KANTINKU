@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('kategori_menu', function (Blueprint $table) {
             $table->id();
+            $table->string('nama', 50);
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }

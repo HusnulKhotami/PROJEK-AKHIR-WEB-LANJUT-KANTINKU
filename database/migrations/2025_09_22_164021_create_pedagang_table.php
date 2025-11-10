@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('pedagang', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id'); // relasi ke tabel user
+            $table->string('nama_kantin', 100);
+            $table->string('lokasi', 255);
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
         });
     }
 
