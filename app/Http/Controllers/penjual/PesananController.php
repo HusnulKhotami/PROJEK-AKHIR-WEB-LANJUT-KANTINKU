@@ -3,63 +3,50 @@
 namespace App\Http\Controllers\penjual;
 
 use App\Http\Controllers\Controller;
+use App\Models\Pesanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PesananController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Tampilkan daftar semua pesanan untuk pedagang yang login
      */
     public function index()
     {
-        //
+        $pesanan = Pesanan::where('id_pedagang', Auth::id())
+            ->with('mahasiswa')
+            ->latest()
+            ->get();
+
+        return view('penjual.pesanan.index', compact('pesanan'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Form update status
      */
-    public function create()
+    public function edit($id)
     {
-        //
+        $pesanan = Pesanan::where('id_pedagang', Auth::id())->findOrFail($id);
+
+        return view('penjual.pesanan.edit', compact('pesanan'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Proses update status pesanan
      */
-    public function store(Request $request)
+    public function update(Request $request, $id)
     {
-        //
-    }
+        $request->validate([
+            'status' => 'required'
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $pesanan = Pesanan::where('id_pedagang', Auth::id())->findOrFail($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        $pesanan->update([
+            'status' => $request->status
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('penjual.pesanan.index')->with('success', 'Status berhasil diperbarui!');
     }
 }

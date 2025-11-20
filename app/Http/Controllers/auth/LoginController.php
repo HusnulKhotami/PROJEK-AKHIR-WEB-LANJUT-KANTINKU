@@ -1,68 +1,51 @@
 <?php
 
-namespace App\Http\Controllers\auth;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    /**
-     * Tampilkan halaman login
-     */
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    /**
-     * Proses login user berdasarkan email & password
-     */
     public function login(Request $request)
     {
-        // Validasi input
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        // Coba autentikasi
         if (Auth::attempt($credentials)) {
+
             $request->session()->regenerate();
 
-            $user = Auth::user();
-
-            // Cek apakah role valid
-            switch ($user->role) {
-                case 'admin':
-                    return redirect()->route('admin.dashboard');
-                case 'penjual':
-                    return redirect()->route('penjual.dashboard');
-                case 'mahasiswa':
-                    return redirect()->route('mahasiswa.dashboard');
-                default:
-                    // Logout langsung jika role tidak dikenal
-                    Auth::logout();
-                    return back()->withErrors([
-                        'email' => 'Role tidak dikenal. Hubungi admini.',
-                    ])->onlyInput('email');
+            // Jika email belum diverifikasi → DO NOT LOGOUT → arahkan ke notice
+            if (!Auth::user()->hasVerifiedEmail()) {
+                return redirect()->route('verification.notice');
             }
+
+            // redirect sesuai role
+            return match (Auth::user()->role) {
+                'admin' => redirect()->route('admin.dashboard'),
+                'penjual' => redirect()->route('penjual.dashboard'),
+                'mahasiswa' => redirect()->route('mahasiswa.dashboard'),
+                default => redirect('/'),
+            };
         }
 
-        // Jika gagal login (email atau password salah)
         return back()->withErrors([
-            'email' => 'Email atau password salah.',
+            'email' => 'Email atau password salah.'
         ])->onlyInput('email');
     }
 
-    /**
-     * Logout user dan hapus sesi
-     */
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

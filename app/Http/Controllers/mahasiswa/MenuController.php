@@ -18,14 +18,16 @@ class MenuController extends Controller
 
         $query = Menu::with('kategori');
 
-        // Search nama, kategori, deskripsi
+        // Search case-insensitive
         if ($search) {
+            $search = strtolower($search);
+
             $query->where(function ($q) use ($search) {
-                $q->where('nama', 'like', "%{$search}%")
-                ->orWhere('deskripsi', 'like', "%{$search}%")
-                ->orWhereHas('kategori', function ($cat) use ($search) {
-                    $cat->where('nama', 'like', "%{$search}%");
-                });
+                $q->whereRaw('LOWER(nama) LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('LOWER(deskripsi) LIKE ?', ["%{$search}%"])
+                  ->orWhereHas('kategori', function ($cat) use ($search) {
+                      $cat->whereRaw('LOWER(nama) LIKE ?', ["%{$search}%"]);
+                  });
             });
         }
 

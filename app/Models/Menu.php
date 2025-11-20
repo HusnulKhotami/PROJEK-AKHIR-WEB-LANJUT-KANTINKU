@@ -10,6 +10,7 @@ class Menu extends Model
     use HasFactory;
 
     protected $table = 'menu';
+
     protected $fillable = [
         'id_pedagang',
         'kategori_id',
@@ -25,17 +26,26 @@ class Menu extends Model
         return $this->belongsTo(KategoriMenu::class, 'kategori_id');
     }
 
-    // ✅ accessor gambar
+    /**
+     * Accessor gambar_url → otomatis menghasilkan asset('storage/menu/...').
+     */
+    public function pedagang(){
+        
+        return $this->belongsTo(Pedagang::class, 'id_pedagang');
+    }
     public function getGambarUrlAttribute($value)
     {
+        // Jika tidak ada gambar → pakai default
         if (!$value) {
-            return asset('image/menu/default.png'); // fallback
+            return asset('storage/menu/default.png');
         }
 
+        // Jika URL penuh sudah http
         if (str_starts_with($value, 'http')) {
             return $value;
         }
 
-        return asset($value); // contoh: image/menu/nasi_goreng.png
+        // Pastikan path benar: storage/menu/namafile.jpg
+        return asset('storage/' . $value);
     }
 }

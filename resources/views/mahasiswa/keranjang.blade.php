@@ -121,6 +121,28 @@
 
   @include('landing.fotter')
 
+  {{-- pesan hapus --}}
+  @if (session('success'))
+  <div id="toast-success" 
+       class="fixed top-5 right-5 z-50 flex items-center w-full max-w-sm p-4 mb-4 bg-white rounded-lg shadow-lg border-l-4 border-green-500 animate-slide-in"
+       role="alert">
+      <i data-lucide="check-circle" class="w-5 h-5 text-green-500 mr-3"></i>
+      <div class="text-sm font-medium text-gray-700">{{ session('success') }}</div>
+      <button type="button" onclick="document.getElementById('toast-success').remove();" 
+        class="ml-auto text-gray-400 hover:text-gray-600 focus:ring-2 focus:ring-gray-300 rounded-lg p-1.5 inline-flex items-center">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+  </div>
+  <script>
+    setTimeout(() => {
+      const toast = document.getElementById('toast-success');
+      if (toast) toast.remove();
+    }, 3000);
+  </script>
+  @endif
+
   <script>lucide.createIcons();</script>
 </body>
 </html>

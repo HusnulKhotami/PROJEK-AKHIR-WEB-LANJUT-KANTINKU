@@ -20,10 +20,9 @@
 
 <body class="bg-gray-50 text-gray-800 font-sans">
 
-  {{-- ✅ Navbar --}}
   @include('landing.header-mhs')
 
-  {{-- ✅ HERO --}}
+
   <section class="relative pt-40 pb-28 text-center text-white bg-cover bg-center fade-in"
     style="background-image: url('{{ asset('image/kantin-kampus.jpg') }}')">
 
@@ -37,7 +36,7 @@
     </div>
   </section>
 
-  {{-- ✅ CONTENT --}}
+  {{-- CONTENT --}}
   <section class="max-w-7xl mx-auto py-16 px-6 fade-in">
 
     <h3 class="text-3xl font-bold text-green-700 mb-10 flex items-center gap-2">

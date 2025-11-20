@@ -1,34 +1,26 @@
 <?php
-
 namespace App\Http\Controllers\mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\Menu;
-use App\Models\Pesanan;
-use Illuminate\Support\Facades\Auth;
+use App\Models\KategoriMenu;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // // Menu paling populer (berdasarkan pesanan terbanyak)
-        // $menuPopuler = Menu::withCount('pesanan')
-        //     ->orderBy('pesanan_count', 'desc')
-        //     ->take(4)
-        //     ->get();
+        $menuFavorit = Menu::with('kategori')
+            ->inRandomOrder()
+            ->take(6)
+            ->get();
 
-        // // Total pesanan user
-        // $totalPesanan = Pesanan::where('id_mahasiswa', Auth::id())->count();
+        // Buat URL gambar yang benar
+        foreach ($menuFavorit as $m) {
+            $m->full_url = asset('storage/menu/' . $m->gambar_url);
+        }
 
-        // // Pesanan terakhir user
-        // $pesananTerakhir = Pesanan::where('id_mahasiswa', Auth::id())
-        //     ->latest()
-        //     ->first();
+        $kategoriList = KategoriMenu::all();
 
-        return view('mahasiswa.dashboard', compact(
-            'menuPopuler',
-            'totalPesanan',
-            'pesananTerakhir'
-        ));
+        return view('mahasiswa.dashboard', compact('menuFavorit', 'kategoriList'));
     }
 }

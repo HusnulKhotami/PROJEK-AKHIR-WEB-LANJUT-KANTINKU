@@ -9,7 +9,7 @@ class Pesanan extends Model
 {
     use HasFactory;
 
-    protected $table = "pesanan";
+    protected $table = 'pesanan';
 
     protected $fillable = [
         'user_id',
@@ -19,7 +19,7 @@ class Pesanan extends Model
         'metode_pembayaran'
     ];
 
-    public function user()
+    public function mahasiswa()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -29,9 +29,13 @@ class Pesanan extends Model
         return $this->belongsTo(Pedagang::class, 'id_pedagang');
     }
 
-    // ✅ Perbaikan relasi detail pesanan
     public function item()
     {
         return $this->hasMany(ItemPesanan::class, 'id_pesanan');
+    }
+
+    public function transaksi()
+    {
+        return $this->hasOne(Transaksi::class, 'id_pesanan');
     }
 }

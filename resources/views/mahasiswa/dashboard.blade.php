@@ -6,130 +6,149 @@
   <title>KantinKu | Dashboard Mahasiswa</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
+
   <style>
-    .fade-in {
-      animation: fadeIn 0.8s ease-in-out;
-    }
+    .fade-in { animation: fadeIn 0.8s ease-in-out; }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
+
 <body class="bg-gray-50 text-gray-800 font-sans">
 
   <!-- Navbar -->
   @include('landing.header-mhs')
 
-  <!-- ✅ Hero Section Dashboard -->
-    <!-- Hero Section -->
-    <section class="relative pt-40 pb-32 text-center text-white fade-in bg-cover bg-center" style="background-image: url('{{ asset('image/kantin-kampus.jpg') }}')">
-      <div class="absolute inset-0 bg-green-900 bg-opacity-60"></div>
-      <div class="relative max-w-3xl mx-auto px-6">
-        <h2 class="text-4xl md:text-5xl font-bold mb-4">Selamat Datang, <span class="text-green-300">{{ Auth::user()->nama ?? 'Mahasiswa' }}</span>!</h2>
-        <p class="text-lg text-gray-200 mb-6">Temukan dan pesan makanan favoritmu di <span class="font-semibold text-green-300">KantinKu</span> — cepat, aman, dan praktis.</p>
-        <a href="#menu" class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-full text-lg shadow transition"><i data-lucide="shopping-bag" class="inline w-5 h-5 mr-2"></i>Pesan Sekarang</a>
-      </div>
-    </section>
+  <!-- HERO -->
+  <section class="relative pt-40 pb-32 text-center text-white bg-cover bg-center"
+    style="background-image: url('{{ asset('image/kantin-kampus.jpg') }}')">
+    <div class="absolute inset-0 bg-green-900 bg-opacity-60"></div>
 
-  <!-- Menu Section -->
-  <section id="menu" class="max-w-7xl mx-auto py-16 px-6 fade-in">
-    <div class="flex justify-between items-center mb-8">
-      <h3 class="text-3xl font-bold text-green-700">Menu Hari Ini</h3>
-      <div class="flex items-center gap-3">
-        <input type="text" placeholder="Cari menu..." class="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500">
-        <select class="border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
-          <option>Semua Kategori</option>
-          <option>Makanan</option>
-          <option>Minuman</option>
-          <option>Snack</option>
-        </select>
+    <div class="relative max-w-3xl mx-auto px-6">
+      <h2 class="text-4xl md:text-5xl font-bold mb-4">
+        Selamat Datang,
+        <span class="text-green-300">{{ Auth::user()->nama ?? 'Mahasiswa' }}</span>!
+      </h2>
+
+      <p class="text-lg text-gray-200 mb-6">
+        Pesan makanan kampus kini lebih cepat, mudah, dan tanpa antre.
+      </p>
+
+      <a href="#menu-favorit" 
+         class="bg-green-500 hover:bg-green-600 px-8 py-3 rounded-full text-lg shadow transition text-white">
+         Mulai Jelajah
+      </a>
+    </div>
+  </section>
+
+  <!-- FITUR -->
+  <section id="fitur" class="max-w-7xl mx-auto py-20 px-6 fade-in">
+    <h3 class="text-3xl font-bold text-center mb-14 text-green-700">Kenapa Memilih KantinKu?</h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div class="bg-white p-8 rounded-xl shadow hover:shadow-md transform hover:-translate-y-1 transition text-center">
+        <i data-lucide="rocket" class="w-12 h-12 mx-auto text-green-600 mb-4"></i>
+        <h4 class="font-semibold text-xl mb-2">Proses Cepat</h4>
+        <p class="text-gray-600">Pemesanan hanya beberapa detik tanpa antre panjang.</p>
       </div>
+
+      <div class="bg-white p-8 rounded-xl shadow hover:shadow-md transform hover:-translate-y-1 transition text-center">
+        <i data-lucide="shield-check" class="w-12 h-12 mx-auto text-green-600 mb-4"></i>
+        <h4 class="font-semibold text-xl mb-2">Aman dan Terpercaya</h4>
+        <p class="text-gray-600">Data dan transaksi terlindungi sepenuhnya.</p>
+      </div>
+
+      <div class="bg-white p-8 rounded-xl shadow hover:shadow-md transform hover:-translate-y-1 transition text-center">
+        <i data-lucide="smartphone" class="w-12 h-12 mx-auto text-green-600 mb-4"></i>
+        <h4 class="font-semibold text-xl mb-2">Desain Modern</h4>
+        <p class="text-gray-600">Tampilan modern dan mudah digunakan di semua perangkat.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- MENU FAVORIT HARI INI -->
+<section id="menu-favorit" class="py-16 bg-white fade-in">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <div class="flex justify-between items-center mb-10">
+      <h3 class="text-3xl font-bold text-green-700">Menu Favorit Hari Ini</h3>
+
+      <a href="{{ route('mahasiswa.menu-mhs') }}" 
+         class="text-green-600 hover:text-green-800 font-semibold flex items-center gap-2 transition">
+        Lihat Semua Menu
+        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+      </a>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-      <!-- Contoh Menu -->
-      @foreach (['Nasi Goreng','Ayam Geprek','Mie Goreng','Es Teh','Kopi Hitam','Milkshake'] as $menu)
-      <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 p-4 text-center">
-        <img src="https://source.unsplash.com/300x200/?{{ urlencode($menu) }}" alt="{{ $menu }}" class="rounded-lg mb-4 mx-auto">
-        <h4 class="font-semibold text-lg">{{ $menu }}</h4>
-        <p class="text-gray-600 mb-2">Rp{{ rand(8000,20000) }}</p>
-        <button class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition w-full flex justify-center items-center gap-2">
-          <i data-lucide="shopping-cart" class="w-4 h-4"></i> Tambah ke Keranjang
-        </button>
+      @foreach ([
+        ['name' => 'Nasi Goreng Spesial', 'price' => 'Rp 18.000', 'img' => 'nasgor.jpg'],
+        ['name' => 'Ayam Geprek', 'price' => 'Rp 20.000', 'img' => 'geprek.jpg'],
+        ['name' => 'Mie Ayam', 'price' => 'Rp 16.000', 'img' => 'mieayam.jpg'],
+        ['name' => 'Soto Ayam', 'price' => 'Rp 17.000', 'img' => 'soto.jpg'],
+        ['name' => 'Bakso Urat', 'price' => 'Rp 19.000', 'img' => 'bakso.jpg'],
+        ['name' => 'Kopi Susu', 'price' => 'Rp 10.000', 'img' => 'kopi.jpg'],
+        ['name' => 'Jus Alpukat', 'price' => 'Rp 12.000', 'img' => 'jus.jpg'],
+        ['name' => 'Es Teh Manis', 'price' => 'Rp 6.000', 'img' => 'esteh.jpg'],
+      ] as $menu)
+      <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2 overflow-hidden">
+        <img src="{{ asset('image/menu/' . $menu['img']) }}" 
+             alt="{{ $menu['name'] }}" 
+             class="w-full h-48 object-cover rounded-t-xl">
+        <div class="p-5">
+          <h4 class="text-lg font-semibold text-green-700 mb-1">{{ $menu['name'] }}</h4>
+          <p class="text-gray-600 mb-3">{{ $menu['price'] }}</p>
+          <button 
+            class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition w-full flex justify-center items-center gap-2">
+            <i data-lucide="shopping-cart" class="w-4 h-4"></i> Tambah ke Keranjang
+          </button>
+        </div>
       </div>
       @endforeach
     </div>
+  </div>
+</section>
+
+
+  <!-- CTA -->
+  <section class="bg-green-700 text-white py-20 text-center fade-in">
+    <h3 class="text-4xl font-extrabold mb-4">Siap Memesan?</h3>
+    <p class="text-lg mb-6">Pesan sekarang dan rasakan kemudahannya!</p>
+
+    <a href="{{ route('mahasiswa.menu-mhs') }}" 
+       class="bg-white text-green-700 px-10 py-4 rounded-full text-lg font-semibold shadow hover:bg-gray-100 transition">
+       Lihat Semua Menu
+    </a>
   </section>
 
-  <!-- Status Pesanan -->
-  <section id="status" class="bg-green-100 py-16 fade-in">
-    <div class="max-w-5xl mx-auto px-6">
-      <h3 class="text-3xl font-bold text-center mb-10 text-green-700">Status Pesanan Anda</h3>
+  <!-- STATISTIK / ACHIEVEMENTS -->
+  <section class="bg-green-500 text-white py-20 fade-in">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-10 text-center px-6">
 
-      <div class="bg-white rounded-xl shadow p-6 space-y-4">
-        <div class="flex justify-between items-center border-b pb-3">
-          <div>
-            <h4 class="font-semibold text-lg">Ayam Geprek</h4>
-            <p class="text-sm text-gray-500">Kode Pesanan: <span class="font-mono">#A12345</span></p>
-          </div>
-          <span class="bg-yellow-100 text-yellow-700 px-4 py-1 rounded-full text-sm font-medium">Diproses</span>
-        </div>
-        <div class="flex justify-between items-center border-b pb-3">
-          <div>
-            <h4 class="font-semibold text-lg">Es Teh Manis</h4>
-            <p class="text-sm text-gray-500">Kode Pesanan: <span class="font-mono">#A12346</span></p>
-          </div>
-          <span class="bg-green-100 text-green-700 px-4 py-1 rounded-full text-sm font-medium">Siap Diambil</span>
-        </div>
-        <div class="flex justify-between items-center">
-          <div>
-            <h4 class="font-semibold text-lg">Mie Goreng Pedas</h4>
-            <p class="text-sm text-gray-500">Kode Pesanan: <span class="font-mono">#A12347</span></p>
-          </div>
-          <span class="bg-gray-100 text-gray-700 px-4 py-1 rounded-full text-sm font-medium">Selesai</span>
-        </div>
+      <div>
+        <h4 class="text-4xl font-extrabold mb-2">+1200</h4>
+        <p class="text-gray-200">Mahasiswa Aktif Menggunakan</p>
       </div>
+
+      <div>
+        <h4 class="text-4xl font-extrabold mb-2">+3200</h4>
+        <p class="text-gray-200">Pesanan Selesai</p>
+      </div>
+
+      <div>
+        <h4 class="text-4xl font-extrabold mb-2">+20</h4>
+        <p class="text-gray-200">Tenant Kantin Bergabung</p>
+      </div>
+
     </div>
   </section>
 
-  <!-- Riwayat Pesanan -->
-  <section id="riwayat" class="max-w-7xl mx-auto py-16 px-6 fade-in">
-    <h3 class="text-3xl font-bold text-center mb-10 text-green-700">Riwayat Pesanan</h3>
-
-    <div class="overflow-x-auto">
-      <table class="min-w-full bg-white shadow-md rounded-xl overflow-hidden">
-        <thead class="bg-green-600 text-white">
-          <tr>
-            <th class="py-3 px-6 text-left">Tanggal</th>
-            <th class="py-3 px-6 text-left">Menu</th>
-            <th class="py-3 px-6 text-left">Total</th>
-            <th class="py-3 px-6 text-left">Status</th>
-          </tr>
-        </thead>
-        <tbody class="text-gray-700">
-          <tr class="border-b hover:bg-green-50 transition">
-            <td class="py-3 px-6">5 Nov 2025</td>
-            <td class="py-3 px-6">Nasi Goreng Spesial</td>
-            <td class="py-3 px-6">Rp15.000</td>
-            <td class="py-3 px-6 text-green-600 font-medium">Selesai</td>
-          </tr>
-          <tr class="border-b hover:bg-green-50 transition">
-            <td class="py-3 px-6">4 Nov 2025</td>
-            <td class="py-3 px-6">Es Kopi Susu</td>
-            <td class="py-3 px-6">Rp10.000</td>
-            <td class="py-3 px-6 text-yellow-600 font-medium">Diproses</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- Footer -->
+  <!-- FOOTER -->
   @include('landing.fotter')
 
-  <script>
-    lucide.createIcons();
-  </script>
+  <script> lucide.createIcons(); </script>
+
 </body>
 </html>

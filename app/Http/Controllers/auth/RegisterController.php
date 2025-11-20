@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\auth;
+namespace App\Http\Controllers\Auth;
+
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
@@ -22,9 +24,8 @@ class RegisterController extends Controller
             'role' => 'required|in:mahasiswa,penjual',
             'phone' => 'nullable|string|max:12',
         ]);
-        
-        //proses validasi akun jika lolos akan buat user baru
-        User::create([
+
+        $user = User::create([
             'nama' => $request->nama,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -32,6 +33,9 @@ class RegisterController extends Controller
             'phone' => $request->phone,
         ]);
 
-        return redirect()->route('login')->with('success', 'Pendaftaran berhasil! Silakan login.');
+        event(new Registered($user));
+
+        return redirect()->route('verification.notice')
+            ->with('success', 'Pendaftaran berhasil! Silakan cek email untuk verifikasi.');
     }
 }
