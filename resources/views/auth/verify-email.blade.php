@@ -9,12 +9,20 @@
   <div class="bg-white shadow-lg rounded-xl p-10 text-center max-w-md">
     <h2 class="text-2xl font-bold text-green-700 mb-4">Verifikasi Email Kamu</h2>
     <p class="text-gray-600 mb-6">
-      Kami sudah mengirim link verifikasi ke email kamu.<br>
+      Kami telah mengirim link verifikasi ke email kamu.<br>
       Silakan cek email untuk mengaktifkan akun.
     </p>
 
     @if (session('message'))
-      <div class="text-green-600 mb-4 font-medium">{{ session('message') }}</div>
+      <div class="bg-green-100 text-green-700 p-3 rounded-md mb-4">{{ session('message') }}</div>
+    @endif
+
+    @if (session('status'))
+      <div class="bg-blue-100 text-blue-700 p-3 rounded-md mb-4">{{ session('status') }}</div>
+    @endif
+
+    @if (session('error'))
+      <div class="bg-red-100 text-red-700 p-3 rounded-md mb-4">{{ session('error') }}</div>
     @endif
 
     <form method="POST" action="{{ route('verification.send') }}">

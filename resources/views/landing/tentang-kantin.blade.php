@@ -4,12 +4,10 @@
 
 @section('content')
 
-{{--  Hero Section --}}
 <section 
   class="relative pt-32 pb-28 text-center text-white fade-in bg-cover bg-center bg-no-repeat"
   style="background-image: url('{{ asset('image/kantin-kampus.jpg') }}');">
   
-  {{-- Overlay Transparan --}}
   <div class="absolute inset-0 bg-green-900 bg-opacity-60"></div>
 
   <div class="relative max-w-3xl mx-auto px-6 z-10">
@@ -27,7 +25,6 @@
   </div>
 </section>
 
-{{-- Visi & Misi --}}
 <section class="py-16 max-w-6xl mx-auto px-6 fade-in">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
     <div>
@@ -49,7 +46,6 @@
   </div>
 </section>
 
-{{-- Tim & Kolaborasi --}}
 <section class="bg-white py-16 border-t border-gray-200 fade-in">
   <div class="max-w-6xl mx-auto px-6 text-center">
     <h3 class="text-3xl font-bold text-green-700 mb-10">Tim di Balik KantinKu</h3>
@@ -73,7 +69,6 @@
   </div>
 </section>
 
-{{-- CTA Penutup --}}
 <section class="bg-green-600 text-white text-center py-16 fade-in">
   <h3 class="text-3xl font-bold mb-4">Bergabung Bersama Kami</h3>
   <p class="max-w-2xl mx-auto mb-8 text-lg">
