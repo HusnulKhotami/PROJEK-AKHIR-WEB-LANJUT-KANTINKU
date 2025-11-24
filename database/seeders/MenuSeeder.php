@@ -20,7 +20,11 @@ class MenuSeeder extends Seeder
                 'deskripsi'    => 'Nasi goreng dengan telur dan ayam.',
                 'harga'        => 15000,
                 'stok'         => 20,
+<<<<<<< Updated upstream
                 'gambar_url'   => 'image/menu/nasgor.jpg',
+=======
+                'gambar_url'   => 'image/menu/nasi goreng.jpg',
+>>>>>>> Stashed changes
                 'created_at'   => now(),
                 'updated_at'   => now(),
             ],
@@ -31,7 +35,11 @@ class MenuSeeder extends Seeder
                 'deskripsi'    => 'Teh manis dingin.',
                 'harga'        => 5000,
                 'stok'         => 50,
+<<<<<<< Updated upstream
                 'gambar_url'   => 'image/menu/este.jpg',
+=======
+                'gambar_url'   => 'image/menu/esteh.jpg',
+>>>>>>> Stashed changes
                 'created_at'   => now(),
                 'updated_at'   => now(),
             ],
