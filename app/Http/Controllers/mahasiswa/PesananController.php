@@ -4,12 +4,10 @@ namespace App\Http\Controllers\mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pesanan;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PesananController extends Controller
 {
-    // ✅ Status Pesanan Berjalan (proses & siap)
     public function index()
     {
         $pesanan = Pesanan::where('user_id', Auth::id())
@@ -21,7 +19,6 @@ class PesananController extends Controller
         return view('mahasiswa.status', compact('pesanan'));
     }
 
-    // ✅ Riwayat Pesanan (selesai & dibatalkan)
     public function riwayat()
     {
         $pesanan = Pesanan::where('user_id', Auth::id())
@@ -31,5 +28,20 @@ class PesananController extends Controller
                           ->get();
 
         return view('mahasiswa.riwayat', compact('pesanan'));
+    }
+
+    // DETAIL PESANAN — ini yang tadi hilang
+    public function detail($id_pesanan){
+    $pesanan = Pesanan::with(['pedagang', 'item.menu'])
+                ->where('id', $id_pesanan)
+                ->where('user_id', auth()->id())
+                ->first();
+
+    if (!$pesanan) {
+        return redirect()->route('mahasiswa.status')
+            ->with('error', 'Pesanan tidak ditemukan.');
+    }
+
+    return view('mahasiswa.detail-pesanan', compact('pesanan'));
     }
 }

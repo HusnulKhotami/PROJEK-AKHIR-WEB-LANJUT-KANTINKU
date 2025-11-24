@@ -1,10 +1,9 @@
-<<<<<<< Updated upstream
 <h1>Selamat datang Penjual, {{ Auth::user()->nama }}!</h1>
 <form method="POST" action="{{ route('logout') }}">
   @csrf
   <button type="submit">Logout</button>
 </form>
-=======
+
 @extends('layout.penjual')
 
 @section('content')
@@ -126,8 +125,11 @@
                     @foreach($pesanan as $p)
                     <tr class="border-b hover:bg-gray-50">
 
+
                         <td class="p-3">{{ $p->mahasiswa->nama ?? 'Tidak diketahui' }}</td>
 
+                        <td class="p-3">{{ $p->user->name ?? 'Tidak diketahui' }}</td>
+                        
                         <td class="p-3">Rp {{ number_format($p->total_harga, 0, ',', '.') }}</td>
 
                         <td class="p-3 capitalize">{{ $p->metode_pembayaran }}</td>
@@ -155,8 +157,10 @@
 
 </div>
 
+
 <script src="https://unpkg.com/lucide@latest"></script>
 <script>lucide.createIcons();</script>
 
 @endsection
->>>>>>> Stashed changes
+
+

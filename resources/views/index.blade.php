@@ -72,7 +72,7 @@
       ['nama'=>'Es Teh','harga'=>5000,'img'=>'esteh.jpg'],
     ] as $menu)
     <div class="bg-white rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition p-4">
-      <!-- 📸 Gambar dibuat lebih tinggi agar terlihat panjang -->
+      <!-- gambar -->
       <img src="{{ asset('image/menu/'.$menu['img']) }}" class="w-full h-56 object-cover rounded-lg mb-4 mx-auto"alt="{{ $menu['nama'] }}">
       <h4 class="font-semibold text-lg text-green-700">{{ $menu['nama'] }}</h4>
       <p class="text-gray-600 mb-3">Rp {{ number_format($menu['harga'],0,',','.') }}</p>

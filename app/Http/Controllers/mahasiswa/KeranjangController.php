@@ -14,7 +14,7 @@ class KeranjangController extends Controller
         $this->middleware('auth');
     }
 
-    // ✅ Tampilkan keranjang
+    // menampilkan halaman keranjang
     public function index()
     {
         $keranjang = Keranjang::with('menu')
@@ -24,7 +24,7 @@ class KeranjangController extends Controller
         return view('mahasiswa.keranjang', compact('keranjang'));
     }
 
-    // ✅ Tambah item
+    // fungsi tambah item
     public function tambah(Request $request)
     {
         $request->validate([
@@ -52,7 +52,7 @@ class KeranjangController extends Controller
         return back()->with('success', 'Menu berhasil ditambahkan ke keranjang!');
     }
 
-    // ✅ Kurangi item (-)
+    // fungsi mengurangi item
     public function kurang(Request $request)
     {
         $request->validate([
@@ -71,7 +71,7 @@ class KeranjangController extends Controller
         return back();
     }
 
-    // ✅ Hapus item
+    // hapus item
     public function hapus(Request $request)
     {
         $request->validate([
