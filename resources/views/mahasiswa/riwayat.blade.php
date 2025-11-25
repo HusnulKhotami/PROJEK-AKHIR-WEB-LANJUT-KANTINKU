@@ -86,8 +86,17 @@
             </p>
 
             <span class="inline-block px-4 py-1 text-white text-sm rounded-full
-              {{ $p->status == 'selesai' ? 'bg-green-600' : 'bg-yellow-500' }}">
-              {{ ucfirst($p->status) }}
+              {{ $p->status == 'selesai' ? 'bg-green-600' : 'bg-red-600' }}">
+              @switch($p->status)
+                @case('selesai')
+                  ✨ Selesai
+                @break
+                @case('dibatalkan')
+                  ❌ Dibatalkan
+                @break
+                @default
+                  {{ ucfirst($p->status) }}
+              @endswitch
             </span>
 
             <p class="text-sm text-gray-500 pt-1">
@@ -98,7 +107,7 @@
 
           {{-- Footer --}}
           <div class="p-5 border-t border-gray-100">
-            <a href="#"
+            <a href="{{ route('mahasiswa.detail-pesanan', $p->id) }}"
               class="text-green-600 hover:text-green-700 flex items-center gap-2 text-sm font-medium">
               <i data-lucide="receipt" class="w-4 h-4"></i>
               Lihat Detail Pesanan

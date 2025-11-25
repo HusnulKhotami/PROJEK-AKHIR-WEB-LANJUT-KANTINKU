@@ -61,9 +61,18 @@
 
             {{-- STATUS BADGE --}}
             <span class="px-4 py-1 text-sm rounded-full text-white font-semibold
-              {{ $p->status == 'proses' ? 'bg-yellow-500' : 
-                 ($p->status == 'siap' ? 'bg-green-600' : 'bg-gray-400') }}">
-              {{ ucfirst($p->status) }}
+              {{ $p->status == 'diproses' ? 'bg-yellow-500' : 
+                 ($p->status == 'siap_diambil' ? 'bg-blue-600' : 'bg-gray-400') }}">
+              @switch($p->status)
+                @case('diproses')
+                  ⏳ Diproses
+                @break
+                @case('siap_diambil')
+                  ✅ Siap Diambil
+                @break
+                @default
+                  {{ ucfirst($p->status) }}
+              @endswitch
             </span>
           </div>
 

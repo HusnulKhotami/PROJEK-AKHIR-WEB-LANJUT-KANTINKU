@@ -10,6 +10,9 @@
             $countKeranjang = Auth::check()
                 ? \App\Models\Keranjang::where('user_id', Auth::id())->sum('jumlah')
                 : 0;
+            $countNotifikasi = Auth::check()
+                ? \App\Models\Notifikasi::where('user_id', Auth::id())->where('dibaca', false)->count()
+                : 0;
         @endphp
 
         <!-- Menu Desktop -->
@@ -33,6 +36,22 @@
                 <a href="{{ route('mahasiswa.riwayat') }}"
                    class="{{ request()->routeIs('mahasiswa.riwayat') ? 'text-green-600 font-semibold border-b-2 border-green-600 pb-1' : 'hover:text-green-600 transition' }}">
                     Riwayat
+                </a>
+            </li>
+
+            <!-- Notifikasi -->
+            <li class="relative">
+                <a href="{{ route('mahasiswa.notifikasi.index') }}"
+                  class="flex items-center gap-1 {{ request()->routeIs('mahasiswa.notifikasi.index') 
+                        ? 'text-green-600 font-semibold border-b-2 border-green-600 pb-1' 
+                        : 'hover:text-green-600 transition' }}">
+                    <i data-lucide="bell" class="w-6 h-6"></i>
+
+                    @if ($countNotifikasi > 0)
+                        <span class="absolute -top-2 -right-2 bg-orange-600 text-white text-xs px-2 py-0.5 rounded-full font-bold notification-badge">
+                            {{ $countNotifikasi }}
+                        </span>
+                    @endif
                 </a>
             </li>
 
@@ -76,6 +95,10 @@
             <li><a href="{{ route('mahasiswa.menu-mhs') }}">Menu</a></li>
             <li><a href="{{ route('mahasiswa.status') }}">Status Pesanan</a></li>
             <li><a href="{{ route('mahasiswa.riwayat') }}">Riwayat</a></li>
+            <li class="flex items-center gap-2">
+                <i data-lucide="bell" class="w-5 h-5 text-orange-600"></i>
+                <a href="{{ route('mahasiswa.notifikasi.index') }}">Notifikasi {{ $countNotifikasi > 0 ? '('.$countNotifikasi.')' : '' }}</a>
+            </li>
             <li class="flex items-center gap-2">
                 <i data-lucide="shopping-cart" class="w-5 h-5 text-green-600"></i>
                 <a href="{{ route('mahasiswa.keranjang') }}">Keranjang ({{ $countKeranjang }})</a>

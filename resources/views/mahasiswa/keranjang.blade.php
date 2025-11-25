@@ -111,10 +111,14 @@
           </p>
         </div>
 
-        <button
-          class="mt-6 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold w-full py-4 rounded-xl transition">
-          Checkout Sekarang
-        </button>
+        <form action="{{ route('mahasiswa.checkout') }}" method="GET">
+    <button
+      class="mt-6 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold w-full py-4 rounded-xl transition">
+      Checkout Sekarang
+    </button>
+</form>
+
+
       </div>
     @endif
   </main>

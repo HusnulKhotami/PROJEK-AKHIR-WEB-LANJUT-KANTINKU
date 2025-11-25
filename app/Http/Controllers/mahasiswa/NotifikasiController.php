@@ -3,63 +3,60 @@
 namespace App\Http\Controllers\mahasiswa;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Notifikasi;
+use Illuminate\Support\Facades\Auth;
 
 class NotifikasiController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Tampilkan semua notifikasi mahasiswa
      */
     public function index()
     {
-        //
+        $notifikasi = Notifikasi::where('user_id', Auth::id())
+            ->with('pesanan')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Mark all as read when viewing
+        Notifikasi::where('user_id', Auth::id())
+            ->where('dibaca', false)
+            ->update(['dibaca' => true]);
+
+        return view('mahasiswa.notifikasi', compact('notifikasi'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Mark notifikasi as read
      */
-    public function create()
+    public function markAsRead($id)
     {
-        //
+        $notifikasi = Notifikasi::where('user_id', Auth::id())->findOrFail($id);
+        $notifikasi->update(['dibaca' => true]);
+
+        return response()->json(['success' => true]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Delete notifikasi
      */
-    public function store(Request $request)
+    public function delete($id)
     {
-        //
+        $notifikasi = Notifikasi::where('user_id', Auth::id())->findOrFail($id);
+        $notifikasi->delete();
+
+        return response()->json(['success' => true]);
     }
 
     /**
-     * Display the specified resource.
+     * Get unread count (untuk badge)
      */
-    public function show(string $id)
+    public function getUnreadCount()
     {
-        //
-    }
+        $count = Notifikasi::where('user_id', Auth::id())
+            ->where('dibaca', false)
+            ->count();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json(['count' => $count]);
     }
 }

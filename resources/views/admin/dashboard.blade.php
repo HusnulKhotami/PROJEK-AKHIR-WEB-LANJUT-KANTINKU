@@ -18,16 +18,14 @@
       </div>
 
       <nav class="flex-1 px-4 py-6 space-y-2">
-        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-600 transition">
-          <i data-lucide="users" class="w-5 h-5"></i> Data Pengguna
+        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-green-600 transition">
+          <i data-lucide="home" class="w-5 h-5"></i> Dashboard
         </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-600 transition">
-          <i data-lucide="shopping-bag" class="w-5 h-5"></i> Transaksi
+        <a href="{{ route('admin.verifikasi.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-600 transition">
+          <i data-lucide="check-square" class="w-5 h-5"></i> Verifikasi Transfer
         </a>
         <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-600 transition">
           <i data-lucide="bar-chart-2" class="w-5 h-5"></i> Laporan
-        </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-600 transition">
           <i data-lucide="alert-triangle" class="w-5 h-5"></i> Override Pesanan
         </a>
         <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-600 transition">
@@ -51,35 +49,49 @@
       </div>
 
       <!-- Statistik Card -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <div class="bg-white p-6 rounded-2xl shadow hover:shadow-md transition">
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="text-gray-500 text-sm font-medium">Total Mahasiswa</h3>
-              <p class="text-3xl font-bold text-green-600 mt-1">128</p>
-            </div>
-            <i data-lucide="user-graduate" class="w-10 h-10 text-green-500"></i>
-          </div>
-        </div>
-
-        <div class="bg-white p-6 rounded-2xl shadow hover:shadow-md transition">
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="text-gray-500 text-sm font-medium">Total Penjual</h3>
-              <p class="text-3xl font-bold text-green-600 mt-1">24</p>
-            </div>
-            <i data-lucide="store" class="w-10 h-10 text-green-500"></i>
-          </div>
-        </div>
-
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
         <div class="bg-white p-6 rounded-2xl shadow hover:shadow-md transition">
           <div class="flex items-center justify-between">
             <div>
               <h3 class="text-gray-500 text-sm font-medium">Total Transaksi</h3>
-              <p class="text-3xl font-bold text-green-600 mt-1">564</p>
+              <p class="text-3xl font-bold text-green-600 mt-1">{{ $totalTransaksi }}</p>
             </div>
             <i data-lucide="credit-card" class="w-10 h-10 text-green-500"></i>
           </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow hover:shadow-md transition">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-gray-500 text-sm font-medium">Transfer Pending</h3>
+              <p class="text-3xl font-bold text-yellow-600 mt-1">{{ $totalTransferPending }}</p>
+            </div>
+            <i data-lucide="clock" class="w-10 h-10 text-yellow-500"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow hover:shadow-md transition">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-gray-500 text-sm font-medium">Pendapatan Verified</h3>
+              <p class="text-3xl font-bold text-blue-600 mt-1">Rp {{ number_format($totalPendapatanVerified, 0, ',', '.') }}</p>
+            </div>
+            <i data-lucide="trending-up" class="w-10 h-10 text-blue-500"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow hover:shadow-md transition">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-gray-500 text-sm font-medium">Action Needed</h3>
+              <p class="text-3xl font-bold text-red-600 mt-1">
+                <a href="{{ route('admin.verifikasi.index') }}" class="hover:text-red-800">{{ $totalTransferPending }}</a>
+              </p>
+            </div>
+            <i data-lucide="alert-circle" class="w-10 h-10 text-red-500"></i>
+          </div>
+        </div>
+      </div>
         </div>
       </div>
 

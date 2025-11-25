@@ -45,6 +45,45 @@
 
   <!-- FITUR -->
   <section id="fitur" class="max-w-7xl mx-auto py-20 px-6 fade-in">
+    
+    {{-- DASHBOARD WIDGETS --}}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+      
+      {{-- PESANAN AKTIF --}}
+      <a href="{{ route('mahasiswa.status') }}" class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg p-6 hover:shadow-xl transition transform hover:scale-105">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-blue-100 text-sm">Pesanan Aktif</p>
+            <p class="text-4xl font-bold">{{ \App\Models\Pesanan::where('user_id', Auth::id())->whereIn('status', ['diproses', 'siap_diambil'])->count() }}</p>
+          </div>
+          <i data-lucide="shopping-cart" class="w-12 h-12 text-blue-200 opacity-50"></i>
+        </div>
+      </a>
+
+      {{-- NOTIFIKASI BELUM DIBACA --}}
+      <a href="{{ route('mahasiswa.notifikasi.index') }}" class="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl shadow-lg p-6 hover:shadow-xl transition transform hover:scale-105">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-orange-100 text-sm">Notifikasi Baru</p>
+            <p class="text-4xl font-bold unread-count">{{ \App\Models\Notifikasi::where('user_id', Auth::id())->where('dibaca', false)->count() }}</p>
+          </div>
+          <i data-lucide="bell" class="w-12 h-12 text-orange-200 opacity-50"></i>
+        </div>
+      </a>
+
+      {{-- RIWAYAT PESANAN --}}
+      <a href="{{ route('mahasiswa.riwayat') }}" class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl shadow-lg p-6 hover:shadow-xl transition transform hover:scale-105">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-green-100 text-sm">Pesanan Selesai</p>
+            <p class="text-4xl font-bold">{{ \App\Models\Pesanan::where('user_id', Auth::id())->where('status', 'selesai')->count() }}</p>
+          </div>
+          <i data-lucide="history" class="w-12 h-12 text-green-200 opacity-50"></i>
+        </div>
+      </a>
+
+    </div>
+
     <h3 class="text-3xl font-bold text-center mb-14 text-green-700">Kenapa Memilih KantinKu?</h3>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-10">

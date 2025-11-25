@@ -12,10 +12,45 @@ use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
-    public function checkout(Request $request)
+    /**
+     * Tampilkan form checkout dengan pilihan pembayaran
+     */
+    public function index()
+    {
+        $keranjang = Keranjang::where('user_id', auth()->id())
+            ->with('menu')
+            ->get();
+
+        if ($keranjang->isEmpty()) {
+            return redirect()->route('mahasiswa.keranjang')
+                ->with('error', 'Keranjang masih kosong!');
+        }
+
+        // Filter item yang menu-nya masih ada
+        $keranjang = $keranjang->filter(function ($item) {
+            return $item->menu !== null;
+        });
+
+        if ($keranjang->isEmpty()) {
+            return redirect()->route('mahasiswa.keranjang')
+                ->with('error', 'Menu tidak tersedia!');
+        }
+
+        // Hitung total per pedagang
+        $grouped = $keranjang->groupBy(fn($item) => $item->menu->id_pedagang);
+        $totalKeseluruhan = $keranjang->sum(fn($item) => $item->menu->harga * $item->jumlah);
+
+        return view('mahasiswa.checkout', compact('keranjang', 'grouped', 'totalKeseluruhan'));
+    }
+
+    /**
+     * Proses checkout dan buat pesanan
+     */
+    public function store(Request $request)
     {
         $request->validate([
-            'metode_pembayaran' => 'required|in:cash,ewallet,transfer'
+            'metode_pembayaran' => 'required|in:cash,transfer',
+            'bukti_transfer' => 'nullable|image|max:2048|required_if:metode_pembayaran,transfer'
         ]);
 
         $keranjang = Keranjang::where('user_id', auth()->id())
@@ -26,7 +61,7 @@ class CheckoutController extends Controller
             return back()->with('error', 'Keranjang masih kosong!');
         }
 
-        // FILTER item yang menu-nya sudah hilang
+        // Filter item yang menu-nya sudah hilang
         $keranjang = $keranjang->filter(function ($item) {
             return $item->menu !== null;
         });
@@ -54,7 +89,7 @@ class CheckoutController extends Controller
                 $pesanan = Pesanan::create([
                     'user_id' => auth()->id(),
                     'id_pedagang' => $id_pedagang,
-                    'status' => 'proses',
+                    'status' => 'diproses',
                     'total_harga' => $total_harga,
                     'metode_pembayaran' => $request->metode_pembayaran
                 ]);
@@ -71,11 +106,18 @@ class CheckoutController extends Controller
                 }
 
                 // Buat transaksi
+                $buktiTransfer = null;
+                if ($request->hasFile('bukti_transfer')) {
+                    $buktiTransfer = $request->file('bukti_transfer')->store('bukti_transfer', 'public');
+                }
+
                 Transaksi::create([
                     'id_pesanan' => $pesanan->id,
                     'jumlah' => $total_harga,
                     'metode_pembayaran' => $request->metode_pembayaran,
-                    'status' => 'pending'
+                    'status' => $request->metode_pembayaran === 'cash' ? 'verified' : 'pending',
+                    'payment_date' => now(),
+                    'bukti_transfer' => $buktiTransfer
                 ]);
 
                 if (!$pesananPertama) {
@@ -90,7 +132,7 @@ class CheckoutController extends Controller
 
             return redirect()
                 ->route('mahasiswa.detail-pesanan', $pesananPertama)
-                ->with('success', 'Checkout berhasil!');
+                ->with('success', 'Checkout berhasil! Pesanan Anda sedang diproses.');
 
         } catch (\Exception $e) {
             DB::rollBack();

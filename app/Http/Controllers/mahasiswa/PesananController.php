@@ -11,7 +11,7 @@ class PesananController extends Controller
     public function index()
     {
         $pesanan = Pesanan::where('user_id', Auth::id())
-                          ->whereIn('status', ['proses', 'siap'])
+                          ->whereIn('status', ['diproses', 'siap_diambil'])
                           ->with('pedagang')
                           ->orderBy('created_at', 'desc')
                           ->get();
@@ -30,18 +30,19 @@ class PesananController extends Controller
         return view('mahasiswa.riwayat', compact('pesanan'));
     }
 
-    // DETAIL PESANAN — ini yang tadi hilang
-    public function detail($id_pesanan){
-    $pesanan = Pesanan::with(['pedagang', 'item.menu'])
-                ->where('id', $id_pesanan)
-                ->where('user_id', auth()->id())
-                ->first();
+    // DETAIL PESANAN dengan transaksi
+    public function detail($id_pesanan)
+    {
+        $pesanan = Pesanan::with(['pedagang.user', 'item.menu', 'transaksi'])
+                    ->where('id', $id_pesanan)
+                    ->where('user_id', Auth::id())
+                    ->first();
 
-    if (!$pesanan) {
-        return redirect()->route('mahasiswa.status')
-            ->with('error', 'Pesanan tidak ditemukan.');
-    }
+        if (!$pesanan) {
+            return redirect()->route('mahasiswa.status')
+                ->with('error', 'Pesanan tidak ditemukan.');
+        }
 
-    return view('mahasiswa.detail-pesanan', compact('pesanan'));
+        return view('mahasiswa.detail-pesanan', compact('pesanan'));
     }
 }

@@ -17,6 +17,8 @@ class Transaksi extends Model
         'metode_pembayaran',
         'status',
         'payment_date',
+        'bukti_transfer',
+        'catatan_admin'
     ];
 
     public function pesanan()
