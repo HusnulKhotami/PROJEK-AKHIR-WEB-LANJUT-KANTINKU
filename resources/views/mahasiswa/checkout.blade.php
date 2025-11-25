@@ -34,6 +34,31 @@
     <section class="max-w-7xl mx-auto py-16 px-6 fade-in">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
+            <!-- ERROR MESSAGES -->
+            @if ($errors->any())
+            <div class="lg:col-span-3 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6">
+                <h4 class="font-bold text-red-800 mb-3 flex items-center gap-2">
+                    <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                    Terjadi Kesalahan:
+                </h4>
+                <ul class="text-red-700 space-y-1 text-sm">
+                    @foreach ($errors->all() as $error)
+                    <li>• {{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
+            <!-- SUCCESS MESSAGES -->
+            @if (session('success'))
+            <div class="lg:col-span-3 bg-green-50 border-l-4 border-green-500 p-4 rounded-lg mb-6">
+                <p class="text-green-800 font-semibold flex items-center gap-2">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    {{ session('success') }}
+                </p>
+            </div>
+            @endif
+
             <!-- LEFT: RINGKASAN PESANAN -->
             <div class="lg:col-span-2">
                 <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
@@ -133,9 +158,9 @@
                         </div>
 
                         <!-- TOMBOL CHECKOUT -->
-                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition flex items-center justify-center gap-2">
+                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition flex items-center justify-center gap-2" id="checkout-btn">
                             <i data-lucide="check-circle" class="w-5 h-5"></i>
-                            Konfirmasi Pesanan
+                            <span id="btn-text">Konfirmasi Pesanan</span>
                         </button>
 
                         <a href="{{ route('mahasiswa.keranjang') }}"
@@ -197,11 +222,25 @@
 
         // Validate form sebelum submit
         document.querySelector('form').addEventListener('submit', function(e) {
-            const method = document.querySelector('input[name="metode_pembayaran"]:checked').value;
-            if (method === 'transfer' && !document.getElementById('bukti_transfer').files[0]) {
+            const method = document.querySelector('input[name="metode_pembayaran"]:checked');
+            
+            if (!method) {
+                e.preventDefault();
+                alert('Silakan pilih metode pembayaran!');
+                return;
+            }
+            
+            if (method.value === 'transfer' && !document.getElementById('bukti_transfer').files[0]) {
                 e.preventDefault();
                 alert('Silakan upload bukti transfer terlebih dahulu!');
+                return;
             }
+            
+            // Show loading state
+            const btn = document.getElementById('checkout-btn');
+            const btnText = document.getElementById('btn-text');
+            btn.disabled = true;
+            btnText.textContent = 'Memproses...';
         });
     </script>
 

@@ -48,16 +48,34 @@ class CheckoutController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // Debug logging
+        \Log::info('Checkout store initiated', [
+            'user_id' => auth()->id(),
+            'method' => $request->get('metode_pembayaran'),
+            'has_file' => $request->hasFile('bukti_transfer'),
+            'all_data' => $request->all()
+        ]);
+        
+        // Validate input
+        $validated = $request->validate([
             'metode_pembayaran' => 'required|in:cash,transfer',
             'bukti_transfer' => 'nullable|image|max:2048|required_if:metode_pembayaran,transfer'
+        ], [
+            'metode_pembayaran.required' => 'Silakan pilih metode pembayaran',
+            'metode_pembayaran.in' => 'Metode pembayaran tidak valid',
+            'bukti_transfer.required_if' => 'Bukti transfer harus diupload',
+            'bukti_transfer.image' => 'File harus berupa gambar',
+            'bukti_transfer.max' => 'Ukuran file maksimal 2MB'
         ]);
+        
+        \Log::info('Validation passed', $validated);
 
         $keranjang = Keranjang::where('user_id', auth()->id())
             ->with('menu')
             ->get();
 
         if ($keranjang->isEmpty()) {
+            \Log::warning('Cart is empty', ['user_id' => auth()->id()]);
             return back()->with('error', 'Keranjang masih kosong!');
         }
 
