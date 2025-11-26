@@ -36,6 +36,14 @@
       <strong>Metode Pembayaran:</strong> {{ ucfirst($pesanan->metode_pembayaran) }}
     </p>
 
+    {{-- ✔️ Tambahkan catatan pembeli di sini --}}
+    @if ($pesanan->catatan)
+    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-300 mb-4">
+        <p class="font-semibold text-yellow-700">Catatan Pembeli:</p>
+        <p class="text-gray-700 mt-1">{{ $pesanan->catatan }}</p>
+    </div>
+    @endif
+
     <hr class="my-4">
 
     <h3 class="text-xl font-bold mb-3">Item Pesanan</h3>
@@ -50,7 +58,7 @@
         </tr>
       </thead>
       <tbody>
-        @foreach ($pesanan->item as $i)
+        @foreach ($pesanan->items as $i)
         <tr class="border-b">
           <td class="p-2">{{ $i->menu->nama }}</td>
           <td class="p-2">{{ $i->jumlah }}</td>

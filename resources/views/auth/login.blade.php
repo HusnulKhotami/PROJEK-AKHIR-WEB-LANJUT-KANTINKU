@@ -7,6 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+
   <style>
     @keyframes slideDown {
       from { opacity: 0; transform: translateY(-20px); }
@@ -17,9 +18,9 @@
     }
   </style>
 </head>
+
 <body class="bg-gray-50 text-gray-800 font-sans relative">
 
-  {{-- ✅ Popup Ceklis Sukses --}}
   @if (session('success'))
     <div 
       x-data="{ show: true }"
@@ -28,17 +29,43 @@
       x-init="setTimeout(() => show = false, 3000)"
       class="fixed top-6 right-6 bg-green-100 border border-green-300 text-green-800 rounded-lg shadow-lg flex items-center px-5 py-3 fade-in z-50"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
+      <i data-lucide="check-circle" class="w-6 h-6 text-green-600 mr-2"></i>
       <span class="font-medium">{{ session('success') }}</span>
     </div>
   @endif
 
+
+  @if (session('status'))
+    <div 
+      x-data="{ show: true }"
+      x-show="show"
+      x-transition
+      x-init="setTimeout(() => show = false, 3000)"
+      class="fixed top-6 right-6 bg-green-100 border border-green-300 text-green-800 rounded-lg shadow-lg flex items-center px-5 py-3 fade-in z-50"
+    >
+      <i data-lucide="info" class="w-6 h-6 text-blue-600 mr-2"></i>
+      <span class="font-medium">{{ session('status') }}</span>
+    </div>
+  @endif
+
+  @if (session('error'))
+    <div 
+      x-data="{ show: true }"
+      x-show="show"
+      x-transition
+      x-init="setTimeout(() => show = false, 3000)"
+      class="fixed top-6 right-6 bg-red-100 border border-red-300 text-red-800 rounded-lg shadow-lg flex items-center px-5 py-3 fade-in z-50"
+    >
+      <i data-lucide="alert-circle" class="w-6 h-6 text-red-600 mr-2"></i>
+      <span class="font-medium">{{ session('error') }}</span>
+    </div>
+  @endif
+
+
   <div class="min-h-screen flex items-center justify-center p-4">
     <div class="flex w-full max-w-4xl bg-white rounded-2xl shadow-lg overflow-hidden fade-in">
 
-      <!-- Kiri -->
+      <!-- Bagian kiri (gambar) -->
       <div class="hidden md:flex flex-col justify-center items-center w-1/2 relative text-white p-10 overflow-hidden">
         <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ asset('image/kantin-kampus.jpg') }}');"></div>
         <div class="absolute inset-0 bg-green-800 bg-opacity-70"></div>
@@ -51,9 +78,10 @@
         </div>
       </div>
 
-      <!-- Kanan -->
+      <!-- Bagian kanan (form login) -->
       <div class="flex items-center justify-center w-full md:w-1/2 p-10">
         <div class="w-full max-w-sm">
+
           <div class="text-center mb-6">
             <h2 class="text-2xl font-bold text-green-600 flex justify-center items-center gap-2">
               <i data-lucide="log-in" class="w-5 h-5"></i> Masuk
@@ -74,14 +102,14 @@
               <label class="block text-gray-700 text-sm font-medium mb-1">Email</label>
               <input type="email" name="email" required
                      placeholder="Masukkan email"
-                     class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400">
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-0 focus:border-gray-400">
             </div>
 
             <div class="mb-6">
               <label class="block text-gray-700 text-sm font-medium mb-1">Kata Sandi</label>
               <input type="password" name="password" required
                      placeholder="Masukkan kata sandi"
-                     class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400">
+                     class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-0 focus:border-gray-400">
             </div>
 
             <button type="submit"
@@ -94,8 +122,10 @@
             Belum punya akun?
             <a href="{{ route('register') }}" class="text-green-600 font-semibold hover:underline">Daftar Sekarang</a>
           </p>
+
         </div>
       </div>
+
     </div>
   </div>
 

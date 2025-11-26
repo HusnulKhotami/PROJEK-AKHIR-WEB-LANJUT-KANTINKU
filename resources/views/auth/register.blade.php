@@ -11,7 +11,6 @@
   <div class="min-h-screen flex items-center justify-center p-4">
     <div class="flex w-full max-w-4xl bg-white rounded-2xl shadow-lg overflow-hidden">
       
-      <!-- Kiri -->
     <div class="hidden md:flex flex-col justify-center items-center w-1/2 relative text-white p-10 overflow-hidden">
       <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ asset('image/kantin-kampus.jpg') }}');"></div>
       <div class="absolute inset-0 bg-green-800 bg-opacity-70"></div>
@@ -24,7 +23,6 @@
       </div>
     </div>
 
-      <!-- Kanan -->
       <div class="flex items-center justify-center w-full md:w-1/2 p-8">
         <div class="w-full max-w-sm">
           <div class="text-center mb-6">
@@ -35,6 +33,12 @@
               Bergabung dengan <span class="text-green-600 font-medium">KantinKu</span> sekarang juga
             </p>
           </div>
+
+          @if (session('success'))
+            <div class="mb-4 p-3 bg-green-500 text-white text-sm rounded-lg">
+                {{ session('success') }}
+            </div>
+          @endif
 
           <form method="POST" action="{{ route('register') }}">
             @csrf
@@ -51,27 +55,27 @@
               <label class="block text-gray-700 text-sm font-medium mb-1">Nama Lengkap</label>
               <input type="text" name="nama" value="{{ old('nama') }}" required
                      placeholder="Masukkan nama lengkap"
-                     class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400">
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-0 focus:border-gray-400">
             </div>
 
             <div class="mb-4">
               <label class="block text-gray-700 text-sm font-medium mb-1">Email</label>
               <input type="email" name="email" value="{{ old('email') }}" required
                      placeholder="Masukkan email"
-                     class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400">
+                     class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-0 focus:border-gray-400">
             </div>
 
             <div class="mb-4">
               <label class="block text-gray-700 text-sm font-medium mb-1">Nomor HP</label>
               <input type="tel" name="phone" value="{{ old('phone') }}"
                      placeholder="Masukkan nomor handphone"
-                     class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400">
+                    class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-0 focus:border-gray-400">
             </div>
 
             <div class="mb-4">
               <label class="block text-gray-700 text-sm font-medium mb-1">Daftar Sebagai</label>
               <select name="role" required
-                      class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400">
+                      class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-0 focus:border-gray-400">
                 <option value="">-- Pilih Role --</option>
                 <option value="mahasiswa" {{ old('role')=='mahasiswa'?'selected':'' }}>Mahasiswa</option>
                 <option value="penjual" {{ old('role')=='penjual'?'selected':'' }}>Penjual</option>
@@ -82,14 +86,14 @@
               <label class="block text-gray-700 text-sm font-medium mb-1">Kata Sandi</label>
               <input type="password" name="password" required
                      placeholder="Masukkan kata sandi"
-                     class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400">
+                     class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-0 focus:border-gray-400">
             </div>
 
             <div class="mb-6">
               <label class="block text-gray-700 text-sm font-medium mb-1">Konfirmasi Kata Sandi</label>
               <input type="password" name="password_confirmation" required
                      placeholder="Ulangi kata sandi"
-                     class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-400">
+                     class="w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-0 focus:border-gray-400">
             </div>
 
             <button type="submit" class="w-full bg-green-600 text-white font-medium py-2 rounded-lg hover:bg-green-700 transition">

@@ -3,63 +3,55 @@
 namespace App\Http\Controllers\mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notifikasi;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class NotifikasiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // Tampilan halaman notifikasi penuh
+    public function notifikasi(Request $request)
     {
-        //
+        $notif = Notifikasi::where('user_id', Auth::id())
+            ->latest()
+            ->get();
+
+        // untuk AJAX (popup navbar)
+        if ($request->ajax()) {
+            return response()->json([
+                'count' => Notifikasi::where('user_id', Auth::id())
+                            ->where('status', 'belum_dibaca')
+                            ->count(),
+                'list' => $notif->take(5)->map(function($n) {
+                    return [
+                        'id' => $n->id,
+                        'pesan' => $n->pesan,
+                        'waktu' => $n->created_at->diffForHumans(),
+                    ];
+                })
+            ]);
+        }
+
+        // untuk halaman notifikasi penuh
+        return view('mahasiswa.notifikasi', compact('notif'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+
+    public function read($id)
     {
-        //
+        Notifikasi::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->update(['status' => 'dibaca']);
+
+        return back();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function destroy($id)
     {
-        //
-    }
+        Notifikasi::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->delete();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return back();
     }
 }

@@ -16,7 +16,8 @@ class Pesanan extends Model
         'id_pedagang',
         'status',
         'total_harga',
-        'metode_pembayaran'
+        'metode_pembayaran',
+        'catatan'
     ];
 
     public function mahasiswa()
@@ -29,7 +30,7 @@ class Pesanan extends Model
         return $this->belongsTo(Pedagang::class, 'id_pedagang');
     }
 
-    public function item()
+    public function items()
     {
         return $this->hasMany(ItemPesanan::class, 'id_pesanan');
     }
