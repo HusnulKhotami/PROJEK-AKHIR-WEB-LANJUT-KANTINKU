@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Penjual 1',
+                'nama' => 'Warung Bu Siti',
                 'email' => 'penjual1@kantinku.com',
                 'password' => Hash::make('penjual123'),
                 'role' => 'penjual',
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Penjual 2',
+                'nama' => 'Kedai Pak Budi',
                 'email' => 'penjual2@kantinku.com',
                 'password' => Hash::make('penjual123'),
                 'role' => 'penjual',
@@ -42,7 +42,7 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Mahasiswa 1',
+                'nama' => 'Husnul',
                 'email' => 'mahasiswa1@kantinku.com',
                 'password' => Hash::make('mahasiswa123'),
                 'role' => 'mahasiswa',

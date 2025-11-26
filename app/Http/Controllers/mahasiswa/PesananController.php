@@ -8,10 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 class PesananController extends Controller
 {
+    // Halaman Status Pesanan (pesanan aktif)
     public function index()
     {
         $pesanan = Pesanan::where('user_id', Auth::id())
-                          ->whereIn('status', ['diproses', 'siap_diambil'])
+                          ->whereIn('status', ['proses', 'siap'])
                           ->with('pedagang')
                           ->orderBy('created_at', 'desc')
                           ->get();
@@ -19,6 +20,7 @@ class PesananController extends Controller
         return view('mahasiswa.status', compact('pesanan'));
     }
 
+    // Halaman Riwayat Pesanan
     public function riwayat()
     {
         $pesanan = Pesanan::where('user_id', Auth::id())
@@ -30,12 +32,12 @@ class PesananController extends Controller
         return view('mahasiswa.riwayat', compact('pesanan'));
     }
 
-    // DETAIL PESANAN dengan transaksi
+    // Detail pesanan
     public function detail($id_pesanan)
     {
-        $pesanan = Pesanan::with(['pedagang.user', 'item.menu', 'transaksi'])
+        $pesanan = Pesanan::with(['pedagang', 'items.menu'])
                     ->where('id', $id_pesanan)
-                    ->where('user_id', Auth::id())
+                    ->where('user_id', auth()->id())
                     ->first();
 
         if (!$pesanan) {
@@ -45,4 +47,50 @@ class PesananController extends Controller
 
         return view('mahasiswa.detail-pesanan', compact('pesanan'));
     }
+
+    // Mahasiswa batalkan pesanan
+    public function batal($id)
+    {
+        $pesanan = Pesanan::where('id', $id)
+                        ->where('user_id', Auth::id())
+                        ->first();
+
+        if (!$pesanan) {
+            return back()->with('error', 'Pesanan tidak ditemukan.');
+        }
+
+        // Hanya bisa membatalkan jika status masih proses
+        if ($pesanan->status !== 'proses') {
+            return back()->with('error', 'Pesanan tidak dapat dibatalkan karena sudah diproses penjual.');
+        }
+
+        $pesanan->update([
+            'status' => 'dibatalkan'
+        ]);
+
+        return redirect()->route('mahasiswa.status')
+                ->with('success', 'Pesanan berhasil dibatalkan.');
+    }
+
+    public function hapusRiwayat($id)
+    {
+        $pesanan = Pesanan::where('id', $id)
+                            ->where('user_id', Auth::id())
+                            ->first();
+
+        if (!$pesanan) {
+            return back()->with('error', 'Pesanan tidak ditemukan.');
+        }
+
+        // hanya bisa dihapus jika selesai atau dibatalkan
+        if (!in_array($pesanan->status, ['selesai', 'dibatalkan'])) {
+            return back()->with('error', 'Pesanan belum bisa dihapus.');
+        }
+
+        $pesanan->items()->delete();
+        $pesanan->delete();
+
+        return back()->with('success', 'Riwayat pesanan berhasil dihapus.');
+    }
+
 }

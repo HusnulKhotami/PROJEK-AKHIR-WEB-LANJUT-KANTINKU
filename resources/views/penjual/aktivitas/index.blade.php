@@ -136,13 +136,13 @@
                         <td class="p-3">{{ $p->mahasiswa->nama ?? 'Tidak diketahui' }}</td>
                         <td class="p-3">
                             <div class="text-sm">
-                                @foreach($p->item as $item)
+                                @foreach($p->items as $item)
                                     <div>{{ $item->menu->nama ?? 'N/A' }} (x{{ $item->jumlah }})</div>
                                 @endforeach
                             </div>
                         </td>
                         <td class="p-3">
-                            <span class="font-semibold">{{ $p->item->sum('jumlah') ?? 0 }}</span>
+                            <span class="font-semibold">{{ $p->items->sum('jumlah') ?? 0 }}</span>
                         </td>
                         <td class="p-3 font-bold text-green-700">
                             Rp {{ number_format($p->total_harga, 0, ',', '.') }}
@@ -205,4 +205,3 @@
 </style>
 
 @endsection
-

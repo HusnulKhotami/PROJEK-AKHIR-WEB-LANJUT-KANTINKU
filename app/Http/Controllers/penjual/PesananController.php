@@ -4,78 +4,71 @@ namespace App\Http\Controllers\penjual;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pesanan;
-use App\Models\Notifikasi;
+use App\Models\Pedagang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PesananController extends Controller
 {
-    /**
-     * Tampilkan daftar semua pesanan untuk pedagang yang login
-     */
     public function index()
     {
-        $pesanan = Pesanan::where('id_pedagang', Auth::id())
-            ->with('mahasiswa')
+        $pedagang = Pedagang::where('user_id', Auth::id())->firstOrFail();
+
+        $pesanan = Pesanan::where('id_pedagang', $pedagang->id)
+            ->with(['mahasiswa', 'items.menu'])
             ->latest()
             ->get();
 
         return view('penjual.pesanan.index', compact('pesanan'));
     }
 
-    /**
-     * Form update status
-     */
-    public function edit($id)
-    {
-        $pesanan = Pesanan::where('id_pedagang', Auth::id())
-            ->with('item.menu', 'mahasiswa')
-            ->findOrFail($id);
-
-        return view('penjual.pesanan.edit', compact('pesanan'));
-    }
-
-    /**
-     * Proses update status pesanan dengan notifikasi
-     */
     public function update(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:diproses,siap_diambil,selesai,dibatalkan',
-            'catatan' => 'nullable|string|max:500'
+            'status' => 'required|in:proses,siap,selesai,dibatalkan'
         ]);
 
-        $pesanan = Pesanan::where('id_pedagang', Auth::id())
-            ->with('mahasiswa')
+        $pedagang = Pedagang::where('user_id', Auth::id())->firstOrFail();
+
+        $pesanan = Pesanan::where('id_pedagang', $pedagang->id)
             ->findOrFail($id);
 
-        $oldStatus = $pesanan->status;
-        $newStatus = $request->status;
+        // Jika dibatalkan → hapus pesanan
+        if ($request->status == 'dibatalkan') {
 
-        // Update status pesanan
+            // Hapus item di pesanan
+            $pesanan->items()->delete();
+
+            // Hapus pesanan
+            $pesanan->delete();
+
+            return redirect()->route('penjual.pesanan.index')
+                ->with('success', 'Pesanan berhasil dibatalkan & dihapus!');
+        }
+
+        // Update status lainnya
         $pesanan->update([
-            'status' => $newStatus
-        ]);
-
-        // Buat notifikasi untuk pembeli
-        $pesan = match($newStatus) {
-            'diproses' => 'Pesanan Anda sedang diproses oleh penjual',
-            'siap_diambil' => 'Pesanan Anda sudah siap diambil!',
-            'selesai' => 'Pesanan Anda telah selesai',
-            'dibatalkan' => 'Pesanan Anda dibatalkan oleh penjual',
-            default => 'Status pesanan berubah'
-        };
-
-        Notifikasi::create([
-            'user_id' => $pesanan->user_id,
-            'pesanan_id' => $pesanan->id,
-            'tipe' => 'status_update',
-            'pesan' => $pesan,
-            'catatan' => $request->catatan,
-            'dibaca' => false
+            'status' => $request->status
         ]);
 
         return redirect()->route('penjual.pesanan.index')
-            ->with('success', "Status pesanan berhasil diperbarui menjadi {$newStatus}! Notifikasi dikirim ke pembeli.");
+            ->with('success', 'Status pesanan berhasil diperbarui!');
+    }
+
+    public function destroy($id)
+    {
+        $pedagang = Pedagang::where('user_id', Auth::id())->firstOrFail();
+
+        $pesanan = Pesanan::where('id_pedagang', $pedagang->id)
+            ->findOrFail($id);
+
+        if (!in_array($pesanan->status, ['selesai', 'dibatalkan'])) {
+            return back()->with('error', 'Hanya pesanan selesai atau dibatalkan yang dapat dihapus.');
+        }
+
+        $pesanan->items()->delete();
+        $pesanan->delete();
+
+        return back()->with('success', 'Pesanan berhasil dihapus!');
     }
 }

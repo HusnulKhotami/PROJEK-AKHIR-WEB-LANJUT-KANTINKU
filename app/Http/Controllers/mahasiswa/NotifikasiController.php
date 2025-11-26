@@ -3,60 +3,63 @@
 namespace App\Http\Controllers\mahasiswa;
 
 use App\Http\Controllers\Controller;
-use App\Models\Notifikasi;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class NotifikasiController extends Controller
 {
     /**
-     * Tampilkan semua notifikasi mahasiswa
+     * Display a listing of the resource.
      */
     public function index()
     {
-        $notifikasi = Notifikasi::where('user_id', Auth::id())
-            ->with('pesanan')
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        // Mark all as read when viewing
-        Notifikasi::where('user_id', Auth::id())
-            ->where('dibaca', false)
-            ->update(['dibaca' => true]);
-
-        return view('mahasiswa.notifikasi', compact('notifikasi'));
+        //
     }
 
     /**
-     * Mark notifikasi as read
+     * Show the form for creating a new resource.
      */
-    public function markAsRead($id)
+    public function create()
     {
-        $notifikasi = Notifikasi::where('user_id', Auth::id())->findOrFail($id);
-        $notifikasi->update(['dibaca' => true]);
-
-        return response()->json(['success' => true]);
+        //
     }
 
     /**
-     * Delete notifikasi
+     * Store a newly created resource in storage.
      */
-    public function delete($id)
+    public function store(Request $request)
     {
-        $notifikasi = Notifikasi::where('user_id', Auth::id())->findOrFail($id);
-        $notifikasi->delete();
-
-        return response()->json(['success' => true]);
+        //
     }
 
     /**
-     * Get unread count (untuk badge)
+     * Display the specified resource.
      */
-    public function getUnreadCount()
+    public function show(string $id)
     {
-        $count = Notifikasi::where('user_id', Auth::id())
-            ->where('dibaca', false)
-            ->count();
+        //
+    }
 
-        return response()->json(['count' => $count]);
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
     }
 }

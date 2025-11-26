@@ -50,7 +50,6 @@
 
         </nav>
 
-        <!-- LOGOUT BUTTON -->
         <form method="POST" action="{{ route('logout') }}" class="mt-10">
             @csrf
             <button class="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 shadow">
@@ -60,16 +59,13 @@
 
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="flex-1 p-8">
 
-        <!-- HEADER -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-gray-800">
                 {{ $header ?? 'Dashboard Penjual' }}
             </h1>
 
-            <!-- Logout Mobile -->
             <form method="POST" action="{{ route('logout') }}" class="md:hidden">
                 @csrf
                 <button class="px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600">
@@ -78,7 +74,6 @@
             </form>
         </div>
 
-        {{-- CONTENT --}}
         @yield('content')
 
     </main>
