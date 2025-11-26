@@ -41,8 +41,9 @@
                 @if($item->menu)
                 <div class="bg-white shadow-md hover:shadow-lg rounded-xl p-5 flex gap-5 items-center transition">
 
-                    <img src="{{ $item->menu->gambar_url ?? asset('image/menu/default.png') }}"
-                         class="w-24 h-24 rounded-xl object-cover flex-shrink-0">
+                    <img src="{{ $item->menu->gambar_url ?? asset('storage/menu/default.png') }}"
+                         class="w-24 h-24 rounded-xl object-cover flex-shrink-0"
+                         onerror="if(this.src.startsWith('data:')) return; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 300 300%22%3E%3Crect fill=%22%23f3f4f6%22 width=%22300%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-size=%2218%22 fill=%22%239ca3af%22 text-anchor=%22middle%22 dy=%22.3em%22%3ENo Image%3C/text%3E%3C/svg%3E';">
 
                     <div class="flex-1">
                         <h3 class="text-xl font-semibold text-green-700">

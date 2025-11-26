@@ -113,7 +113,10 @@
       @forelse ($menu as $m)
         <div class="menu-card bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden">
 
-          <img src="{{ $m->gambar_url }}" alt="{{ $m->nama }}" class="w-full h-56 object-cover transition-transform duration-500">
+          <img src="{{ $m->gambar_url }}" 
+               alt="{{ $m->nama }}" 
+               class="w-full h-56 object-cover transition-transform duration-500"
+               onerror="if(this.src.startsWith('data:')) return; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 300%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-size=%2224%22 fill=%22%23999%22 text-anchor=%22middle%22 dy=%22.3em%22%3EImage not found%3C/text%3E%3C/svg%3E';">
 
           <div class="p-5">
             <h4 class="font-semibold text-xl text-green-700 mb-2">{{ $m->nama }}</h4>
