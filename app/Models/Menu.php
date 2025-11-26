@@ -35,6 +35,7 @@ class Menu extends Model
     }
     public function getGambarUrlAttribute($value)
     {
+      
         // Jika tidak ada gambar → pakai default
         if (!$value) {
             return asset('storage/menu/default.png');

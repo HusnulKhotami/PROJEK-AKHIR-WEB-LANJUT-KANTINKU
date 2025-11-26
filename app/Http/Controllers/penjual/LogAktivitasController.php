@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\penjual;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Pesanan;
+use App\Models\Pedagang;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Pedagang;
@@ -86,5 +90,25 @@ class LogAktivitasController extends Controller
     {
         // sementara kosong dulu
         return "Export Excel belum dibuat";
+    }
+
+    /**
+     * Export laporan penjualan ke PDF
+     */
+    public function exportPdf(Request $request)
+    {
+        // TODO: Implementasi export PDF menggunakan library seperti DomPDF atau TCPDF
+        // Untuk sekarang redirect ke halaman laporan dengan print mode
+        return redirect()->route('penjual.aktivitas.index', $request->query())->with('info', 'Gunakan fitur Print dari browser untuk export PDF');
+    }
+
+    /**
+     * Export laporan penjualan ke Excel
+     */
+    public function exportExcel(Request $request)
+    {
+        // TODO: Implementasi export Excel menggunakan library seperti Maatwebsite Excel
+        // Untuk sekarang redirect ke halaman laporan
+        return redirect()->route('penjual.aktivitas.index', $request->query())->with('info', 'Fitur export Excel akan segera diimplementasikan');
     }
 }
