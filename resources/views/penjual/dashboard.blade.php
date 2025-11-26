@@ -4,8 +4,7 @@
 
 <div class="p-6">
 
-    <h1 class="text-2xl font-bold text-gray-700">Dashboard Penjual</h1>
-    <p class="text-gray-500">Selamat datang kembali, {{ Auth::user()->nama }} 👋</p>
+    <p class="text-gray-500">Selamat datang kembali, {{ Auth::user()->nama }} </p>
 
     <!-- STATISTIK -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
@@ -56,19 +55,21 @@
                     @foreach($pesanan as $p)
                     <tr class="border-b hover:bg-gray-50">
 
-                        <td class="p-3">{{ $p->user->name ?? 'Tidak diketahui' }}</td>
+                        <td class="p-3">{{ $p->mahasiswa->nama ?? 'Tidak diketahui' }}</td>
 
                         <td class="p-3">Rp {{ number_format($p->total_harga, 0, ',', '.') }}</td>
 
                         <td class="p-3 capitalize">{{ $p->metode_pembayaran }}</td>
 
                         <td class="p-3">
-                            @if($p->status == 'diproses')
+                            @if($p->status == 'proses')
                                 <span class="px-3 py-1 bg-yellow-200 text-yellow-800 rounded-full text-sm">Diproses</span>
+                            @elseif($p->status == 'siap')
+                                <span class="px-3 py-1 bg-blue-200 text-blue-800 rounded-full text-sm">Siap Ambil</span>
                             @elseif($p->status == 'selesai')
                                 <span class="px-3 py-1 bg-green-200 text-green-800 rounded-full text-sm">Selesai</span>
                             @else
-                                <span class="px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-sm">{{ $p->status }}</span>
+                                <span class="px-3 py-1 bg-red-200 text-red-800 rounded-full text-sm">{{ $p->status }}</span>
                             @endif
                         </td>
 

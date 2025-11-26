@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\auth;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
@@ -34,6 +34,7 @@ class RegisterController extends Controller
         ]);
 
         event(new Registered($user));
+
 
         return redirect()->route('verification.notice')
             ->with('success', 'Pendaftaran berhasil! Silakan cek email untuk verifikasi.');

@@ -9,8 +9,9 @@ use App\Http\Controllers\auth\VerificationController;
 
 use App\Http\Controllers\mahasiswa\MenuController as MahasiswaMenuController;
 use App\Http\Controllers\mahasiswa\KeranjangController;
-use App\Http\Controllers\mahasiswa\PesananController;
+use App\Http\Controllers\mahasiswa\PesananController as MahasiswaPesananController;
 use App\Http\Controllers\mahasiswa\CheckoutController;
+use App\Http\Controllers\mahasiswa\NotifikasiController;
 
 use App\Http\Controllers\penjual\DashboardController;
 use App\Http\Controllers\penjual\MenuController as PenjualMenuController;
@@ -30,12 +31,14 @@ Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('
 Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Email Verifikasi
+// Verifikasi Email
 Route::get('/email/verify', [VerificationController::class, 'notice'])
     ->middleware('auth')->name('verification.notice');
+
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
     ->middleware(['auth', 'signed'])
     ->name('verification.verify');
+
 Route::post('/email/verification-notification', [VerificationController::class, 'send'])
     ->middleware(['auth', 'throttle:6,1'])
     ->name('verification.send');
@@ -56,9 +59,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/pesanan/{id}/edit', [PenjualPesananController::class, 'edit'])->name('pesanan.edit');
 
         Route::put('/pesanan/{id}', [PenjualPesananController::class, 'update'])->name('pesanan.update');
+        Route::delete('/pesanan/{id}', [PenjualPesananController::class, 'destroy'])->name('pesanan.destroy');
 
         // LAPORAN PENJUALAN
         Route::get('/aktivitas', [LogAktivitasController::class, 'index'])->name('aktivitas.index');
+        
+        Route::get('/aktivitas/export-pdf', [LogAktivitasController::class, 'exportPdf'])->name('aktivitas.export-pdf');
+
+        Route::get('/aktivitas/export-excel', [LogAktivitasController::class, 'exportExcel'])->name('aktivitas.export-excel');
     });
 
     //mahasiswa
@@ -68,13 +76,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/menu', [MahasiswaMenuController::class, 'index'])->name('menu-mhs');
 
-        Route::get('/status', [PesananController::class, 'index'])->name('status');
-        Route::get('/riwayat', [PesananController::class, 'riwayat'])->name('riwayat');
+        Route::get('/status', [MahasiswaPesananController::class, 'index'])->name('status');
+        Route::get('/riwayat', [MahasiswaPesananController::class, 'riwayat'])->name('riwayat');
+
+        Route::get('/notifikasi', [NotifikasiController::class, 'notifikasi'])->name('notifikasi');
+        Route::post('/notifikasi/{id}/read', [NotifikasiController::class, 'read'])->name('notifikasi.read');
+        Route::delete('/notifikasi/{id}/hapus', [NotifikasiController::class, 'destroy'])->name('notifikasi.hapus');
 
         // Keranjang
         Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang');
         Route::post('/keranjang/tambah', [KeranjangController::class, 'tambah'])->name('keranjang.tambah');
         Route::post('/keranjang/kurang', [KeranjangController::class, 'kurang'])->name('keranjang.kurang');
         Route::post('/keranjang/hapus', [KeranjangController::class, 'hapus'])->name('keranjang.hapus');
+
+        // Checkout
+        Route::post('/keranjang/checkout', [CheckoutController::class, 'checkout'])->name('keranjang.checkout');
+
+        // DETAIL PESANAN (PERBAIKI DI SINI)
+        Route::get('/detail-pesanan/{id}', [MahasiswaPesananController::class, 'detail'])->name('detail-pesanan');
+        Route::post('/pesanan/{id}/batal', [MahasiswaPesananController::class, 'batal'])->name('pesanan.batal');
+        Route::delete('/pesanan/{id}/hapus', [MahasiswaPesananController::class, 'hapusRiwayat'])->name('pesanan.hapus');
+
     });
 });

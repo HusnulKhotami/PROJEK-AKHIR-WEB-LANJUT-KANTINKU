@@ -13,9 +13,10 @@
         <label class="block mb-3">
             <span class="text-gray-700 font-medium">Status Pesanan</span>
             <select name="status" class="w-full border p-3 rounded-lg">
-                <option {{ $pesanan->status == 'Diproses' ? 'selected' : '' }}>Diproses</option>
-                <option {{ $pesanan->status == 'Siap Diambil' ? 'selected' : '' }}>Siap Diambil</option>
-                <option {{ $pesanan->status == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+                <option value="proses" {{ $pesanan->status == 'proses' ? 'selected' : '' }}>Diproses</option>
+                <option value="siap" {{ $pesanan->status == 'siap' ? 'selected' : '' }}>Siap Diambil</option>
+                <option value="selesai" {{ $pesanan->status == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                <option value="dibatalkan" {{ $pesanan->status == 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
             </select>
         </label>
 

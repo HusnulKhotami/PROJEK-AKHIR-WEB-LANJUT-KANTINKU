@@ -24,12 +24,13 @@ class LoginController extends Controller
 
             $request->session()->regenerate();
 
-            // Jika email belum diverifikasi → DO NOT LOGOUT → arahkan ke notice
+            // Jika email belum diverifikasi
             if (!Auth::user()->hasVerifiedEmail()) {
-                return redirect()->route('verification.notice');
+                return redirect()->route('verification.notice')
+                    ->with('error', 'Harap verifikasi email terlebih dahulu.');
             }
 
-            // redirect sesuai role
+            // Redirect sesuai role setelah login
             return match (Auth::user()->role) {
                 'admin' => redirect()->route('admin.dashboard'),
                 'penjual' => redirect()->route('penjual.dashboard'),

@@ -16,14 +16,14 @@ class PedagangSeeder extends Seeder
             [
                 'user_id' => $penjual1->id,
                 'nama_kantin' => 'Warung Bu Siti',
-                'lokasi' => 'Jalan Cengkeh',
+                'lokasi' => 'Kantin FKIP unila',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'user_id' => $penjual2->id,
                 'nama_kantin' => 'Kedai Pak Budi',
-                'lokasi' => 'Kampung Baru',
+                'lokasi' => 'Kantin FKIP Unila',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
