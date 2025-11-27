@@ -35,7 +35,8 @@ class DashboardController extends Controller
             ->whereDate('created_at', now())
             ->sum('total_harga');
 
-        // Notifikasi — pesanan yang masih proses
+
+        // Notifikasi baru
         $notifikasiBaru = Pesanan::where('id_pedagang', $pedagangId)
             ->where('status', 'proses')
             ->count();

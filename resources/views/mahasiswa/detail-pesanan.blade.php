@@ -73,9 +73,10 @@
       Total: Rp {{ number_format($pesanan->total_harga,0,',','.') }}
     </p>
 
-    <div class="mt-8">
+    <div class="mt-8 flex flex-wrap gap-3 justify-end">
       <a href="{{ route('mahasiswa.status') }}"
-        class="bg-green-600 hover:bg-green-700 px-5 py-3 text-white rounded-xl">
+        class="bg-green-600 hover:bg-green-700 px-5 py-3 text-white rounded-xl font-semibold transition-colors flex items-center gap-2">
+        <i class="fas fa-arrow-left"></i>
         Lihat Status Pesanan
       </a>
     </div>
