@@ -29,7 +29,7 @@ class LogAktivitasController extends Controller
 
         // Query dasar
         $query = Pesanan::where('id_pedagang', $pedagangId)
-            ->where('status', '!=', 'dibatalkan'); // ⛔ Hilangkan pesanan yang dibatalkan
+            ->where('status', '!=', 'dibatalkan'); 
 
         // ============================================
         //  FILTER PER PERIODE

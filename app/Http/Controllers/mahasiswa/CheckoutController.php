@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Keranjang;
 use App\Models\Pesanan;
 use App\Models\ItemPesanan;
+use App\Models\Notifikasi;
 use App\Models\Menu; 
 
 class CheckoutController extends Controller
@@ -48,6 +49,15 @@ class CheckoutController extends Controller
                 'metode_pembayaran' => $request->metode_pembayaran,
                 'catatan' => $request->catatan,
         ]);
+
+
+        // buat notifikasi untuk user
+        Notifikasi::create([
+            'user_id' => $user->id,
+            'pesan' => 'Pesanan baru berhasil dibuat. Menunggu proses dari penjual.',
+            'status' => 'belum_dibaca'
+        ]);
+
 
 
         // menyimpen item menu dan mengurangi stok

@@ -11,6 +11,7 @@ use App\Http\Controllers\mahasiswa\MenuController as MahasiswaMenuController;
 use App\Http\Controllers\mahasiswa\KeranjangController;
 use App\Http\Controllers\mahasiswa\PesananController as MahasiswaPesananController;
 use App\Http\Controllers\mahasiswa\CheckoutController;
+use App\Http\Controllers\mahasiswa\NotifikasiController;
 
 use App\Http\Controllers\penjual\DashboardController;
 use App\Http\Controllers\penjual\MenuController as PenjualMenuController;
@@ -65,6 +66,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         Route::get('/aktivitas/export-pdf', [LogAktivitasController::class, 'exportPdf'])->name('aktivitas.export-pdf');
 
+        // LAPORAN PENJUALAN
+        Route::get('/aktivitas', [LogAktivitasController::class, 'index'])->name('aktivitas.index');
+        
+        Route::get('/aktivitas/export-pdf', [LogAktivitasController::class, 'exportPdf'])->name('aktivitas.export-pdf');
+
         Route::get('/aktivitas/export-excel', [LogAktivitasController::class, 'exportExcel'])->name('aktivitas.export-excel');
     });
 
@@ -78,11 +84,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/status', [MahasiswaPesananController::class, 'index'])->name('status');
         Route::get('/riwayat', [MahasiswaPesananController::class, 'riwayat'])->name('riwayat');
 
+        Route::get('/notifikasi', [NotifikasiController::class, 'notifikasi'])->name('notifikasi');
+        Route::post('/notifikasi/{id}/read', [NotifikasiController::class, 'read'])->name('notifikasi.read');
+        Route::delete('/notifikasi/{id}/hapus', [NotifikasiController::class, 'destroy'])->name('notifikasi.hapus');
+
         // Keranjang
         Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang');
         Route::post('/keranjang/tambah', [KeranjangController::class, 'tambah'])->name('keranjang.tambah');
         Route::post('/keranjang/kurang', [KeranjangController::class, 'kurang'])->name('keranjang.kurang');
         Route::post('/keranjang/hapus', [KeranjangController::class, 'hapus'])->name('keranjang.hapus');
+
         // Checkout
         Route::post('/keranjang/checkout', [CheckoutController::class, 'checkout'])->name('keranjang.checkout');
 

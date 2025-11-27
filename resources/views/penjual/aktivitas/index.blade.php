@@ -185,24 +185,18 @@
                 </thead>
                 <tbody>
                     @forelse($pesanan as $key => $p)
-                    <tr class="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                        <td class="px-8 py-4 font-medium text-gray-800">{{ $key + 1 }}</td>
-                        <td class="px-8 py-4">
-                            <p class="font-medium text-gray-800">{{ $p->mahasiswa->nama ?? 'Tidak diketahui' }}</p>
-                            <p class="text-xs text-gray-500">{{ $p->mahasiswa->nomor_induk ?? '-' }}</p>
-                        </td>
-                        <td class="px-8 py-4">
-                            <div class="text-sm space-y-1">
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-3">{{ $key + 1 }}</td>
+                        <td class="p-3">{{ $p->mahasiswa->nama ?? 'Tidak diketahui' }}</td>
+                        <td class="p-3">
+                            <div class="text-sm">
                                 @foreach($p->items as $item)
-                                    <div class="flex items-center gap-1">
-                                        <span class="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
-                                        {{ $item->menu->nama ?? 'N/A' }}
-                                    </div>
+                                    <div>{{ $item->menu->nama ?? 'N/A' }} (x{{ $item->jumlah }})</div>
                                 @endforeach
                             </div>
                         </td>
-                        <td class="px-8 py-4 font-semibold text-gray-800">
-                            {{ $p->items->sum('jumlah') ?? 0 }}
+                        <td class="p-3">
+                            <span class="font-semibold">{{ $p->items->sum('jumlah') ?? 0 }}</span>
                         </td>
                         <td class="px-8 py-4 font-bold text-green-600">
                             Rp {{ number_format($p->total_harga, 0, ',', '.') }}
