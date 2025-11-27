@@ -5,6 +5,9 @@ namespace App\Http\Controllers\mahasiswa;
 use App\Http\Controllers\Controller;
 use App\Models\Pesanan;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DetailPesananExport;
+use PDF;
 
 class PesananController extends Controller
 {
@@ -91,6 +94,46 @@ class PesananController extends Controller
         $pesanan->delete();
 
         return back()->with('success', 'Riwayat pesanan berhasil dihapus.');
+    }
+
+    // Export Detail Pesanan ke PDF
+    public function exportPdf($id)
+    {
+        $pesanan = Pesanan::with(['pedagang', 'items.menu'])
+                    ->where('id', $id)
+                    ->where('user_id', auth()->id())
+                    ->first();
+
+        if (!$pesanan) {
+            return redirect()->route('mahasiswa.status')
+                ->with('error', 'Pesanan tidak ditemukan.');
+        }
+
+        $filename = 'Detail-Pesanan-' . $pesanan->id . '-' . now()->format('Y-m-d-H-i-s') . '.pdf';
+
+        $pdf = PDF::loadView('exports.detail-pesanan-pdf', [
+            'pesanan' => $pesanan,
+        ]);
+        
+        return $pdf->download($filename);
+    }
+
+    // Export Detail Pesanan ke Excel
+    public function exportExcel($id)
+    {
+        $pesanan = Pesanan::with(['pedagang', 'items.menu'])
+                    ->where('id', $id)
+                    ->where('user_id', auth()->id())
+                    ->first();
+
+        if (!$pesanan) {
+            return redirect()->route('mahasiswa.status')
+                ->with('error', 'Pesanan tidak ditemukan.');
+        }
+
+        $filename = 'Detail-Pesanan-' . $pesanan->id . '-' . now()->format('Y-m-d-H-i-s') . '.xlsx';
+
+        return Excel::download(new DetailPesananExport($pesanan), $filename);
     }
 
 }

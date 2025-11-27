@@ -1,164 +1,156 @@
-<h1>Selamat datang Penjual, {{ Auth::user()->nama }}!</h1>
-<form method="POST" action="{{ route('logout') }}">
-  @csrf
-  <button type="submit">Logout</button>
-</form>
-
 @extends('layout.penjual')
 
 @section('content')
 
-<div class="p-6">
+<!-- Welcome Section -->
+<div class="mb-10">
+    <p class="text-gray-600 text-lg">Selamat datang kembali, <span class="font-bold text-gray-800">{{ Auth::user()->nama }}</span></p>
+    <p class="text-sm text-gray-500 mt-1">{{ now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</p>
+</div>
 
-    <p class="text-gray-500">Selamat datang kembali, {{ Auth::user()->nama }} </p>
+<!-- Stats Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
 
-    <!-- STATISTIK -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
-
-        <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
-            <h3 class="text-gray-500">Total Menu</h3>
-            <p class="text-3xl font-bold text-green-700 mt-2">{{ $totalMenu }}</p>
-        </div>
-
-        <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
-            <h3 class="text-gray-500">Pesanan Hari Ini</h3>
-            <p class="text-3xl font-bold text-blue-700 mt-2">{{ $pesananHariIni }}</p>
-        </div>
-
-        <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
-            <h3 class="text-gray-500">Pendapatan Hari Ini</h3>
-            <p class="text-3xl font-bold text-yellow-600 mt-2">Rp {{ number_format($pendapatan, 0, ',', '.') }}</p>
-        </div>
-
-        <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
-            <h3 class="text-gray-500">Notifikasi Baru</h3>
-            <p class="text-3xl font-bold text-red-600 mt-2">{{ $notifikasiBaru }}</p>
-        </div>
-
-    </div>
-
-    <!-- NOTIFIKASI PESANAN BARU -->
-    @if($pesananMasuk->count() > 0)
-    <div class="mt-10">
-        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6">
-            <div class="flex items-center gap-3">
-                <div class="text-3xl font-bold text-red-600">{{ $notifikasiBaru }}</div>
-                <div>
-                    <h3 class="text-lg font-semibold text-red-700">Pesanan Masuk Baru!</h3>
-                    <p class="text-red-600 text-sm">Ada {{ $notifikasiBaru }} pesanan yang menunggu untuk diproses</p>
-                </div>
+    <!-- Total Menu Card -->
+    <div class="stat-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium">Total Menu</p>
+                <p class="text-4xl font-bold text-green-600 mt-3">{{ $totalMenu }}</p>
+                <p class="text-xs text-gray-500 mt-2">Menu aktif</p>
+            </div>
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                <i class="fas fa-burger text-3xl text-green-600"></i>
             </div>
         </div>
+    </div>
 
-        <h2 class="text-xl font-semibold text-gray-700 mb-4 flex items-center gap-2">
-            <i data-lucide="bell" class="w-6 h-6 text-red-600"></i>
-            Pesanan Masuk (Belum Diproses)
-        </h2>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            @foreach($pesananMasuk as $notif)
-            <div class="bg-white p-5 rounded-lg shadow border-l-4 border-red-500 hover:shadow-lg transition">
-                <div class="flex justify-between items-start mb-3">
-                    <div>
-                        <h4 class="text-lg font-semibold text-gray-800">{{ $notif->mahasiswa->nama ?? 'Mahasiswa' }}</h4>
-                        <p class="text-sm text-gray-500">{{ $notif->created_at->format('d M Y H:i') }}</p>
-                    </div>
-                    <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold">BARU</span>
-                </div>
-
-                <div class="mb-4 bg-gray-50 p-3 rounded">
-                    <h5 class="text-sm font-semibold text-gray-700 mb-2">Item Pesanan:</h5>
-                    <ul class="space-y-1">
-                        @foreach($notif->item as $item)
-                        <li class="text-sm text-gray-600">
-                            <span class="font-medium">{{ $item->menu->nama ?? 'N/A' }}</span>
-                            <span class="text-gray-500">x{{ $item->jumlah }} = Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-
-                <div class="flex justify-between items-center">
-                    <div>
-                        <p class="text-sm text-gray-600">Total:</p>
-                        <p class="text-2xl font-bold text-green-700">Rp {{ number_format($notif->total_harga, 0, ',', '.') }}</p>
-                    </div>
-                    <a href="{{ route('penjual.pesanan.edit', $notif->id) }}" 
-                       class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition">
-                        Proses
-                    </a>
-                </div>
+    <!-- Pesanan Hari Ini Card -->
+    <div class="stat-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium">Pesanan Hari Ini</p>
+                <p class="text-4xl font-bold text-blue-600 mt-3">{{ $pesananHariIni }}</p>
+                <p class="text-xs text-gray-500 mt-2">Total pesanan</p>
             </div>
-            @endforeach
-        </div>
-
-        <div class="mt-4 text-center">
-            <a href="{{ route('penjual.pesanan.index') }}" class="text-green-600 hover:text-green-700 font-semibold">
-                Lihat Semua Pesanan →
-            </a>
+            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                <i class="fas fa-inbox text-3xl text-blue-600"></i>
+            </div>
         </div>
     </div>
-    @endif
 
-    <!-- PESANAN TERBARU -->
-    <div class="mt-10">
-        <h2 class="text-xl font-semibold text-gray-700">Pesanan Terbaru</h2>
+    <!-- Pendapatan Hari Ini Card -->
+    <div class="stat-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium">Pendapatan Hari Ini</p>
+                <p class="text-3xl font-bold text-yellow-600 mt-3">Rp {{ number_format($pendapatan, 0, ',', '.') }}</p>
+                <p class="text-xs text-gray-500 mt-2">Dari pesanan selesai</p>
+            </div>
+            <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center">
+                <i class="fas fa-coins text-3xl text-yellow-600"></i>
+            </div>
+        </div>
+    </div>
 
+    <!-- Notifikasi Baru Card -->
+    <div class="stat-card bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium">Pesanan Diproses</p>
+                <p class="text-4xl font-bold text-red-600 mt-3">{{ $notifikasiBaru }}</p>
+                <p class="text-xs text-gray-500 mt-2">Menunggu diproses</p>
+            </div>
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                <i class="fas fa-bell text-3xl text-red-600"></i>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Recent Orders Section -->
+<div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+    
+    <!-- Header -->
+    <div class="px-8 py-6 border-b border-gray-200 flex items-center justify-between">
+        <div>
+            <h2 class="text-xl font-bold text-gray-800">Pesanan Terbaru</h2>
+            <p class="text-sm text-gray-500 mt-1">5 pesanan terbaru Anda</p>
+        </div>
+        <a href="{{ route('penjual.pesanan.index') }}" class="text-green-600 font-semibold hover:text-green-700 text-sm flex items-center gap-2">
+            Lihat Semua
+            <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+
+    <!-- Content -->
+    <div class="overflow-x-auto">
         @if($pesanan->count() == 0)
-            <p class="text-gray-500 mt-2">Belum ada pesanan.</p>
+            <div class="p-12 text-center">
+                <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-500 font-medium">Belum ada pesanan</p>
+                <p class="text-sm text-gray-400 mt-1">Pesanan akan muncul di sini setelah pembeli melakukan pemesanan</p>
+            </div>
         @else
-        <div class="overflow-x-auto mt-4">
-            <table class="min-w-full bg-white rounded-lg shadow">
-
+            <table class="w-full">
                 <thead>
-                    <tr class="bg-gray-100 border-b">
-                        <th class="p-3 text-left">Pemesan</th>
-                        <th class="p-3 text-left">Total Harga</th>
-                        <th class="p-3 text-left">Metode Pembayaran</th>
-                        <th class="p-3 text-left">Status</th>
-                        <th class="p-3 text-left">Tanggal</th>
+                    <tr class="bg-gray-50 border-b border-gray-200">
+                        <th class="px-8 py-4 text-left text-sm font-semibold text-gray-700">Pemesan</th>
+                        <th class="px-8 py-4 text-left text-sm font-semibold text-gray-700">Total Harga</th>
+                        <th class="px-8 py-4 text-left text-sm font-semibold text-gray-700">Metode Pembayaran</th>
+                        <th class="px-8 py-4 text-left text-sm font-semibold text-gray-700">Status</th>
+                        <th class="px-8 py-4 text-left text-sm font-semibold text-gray-700">Tanggal</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     @foreach($pesanan as $p)
-                    <tr class="border-b hover:bg-gray-50">
-
-                        <td class="p-3">{{ $p->mahasiswa->nama ?? 'Tidak diketahui' }}</td>
-                        
-                        <td class="p-3">Rp {{ number_format($p->total_harga, 0, ',', '.') }}</td>
-
-                        <td class="p-3 capitalize">{{ $p->metode_pembayaran }}</td>
-
-                        <td class="p-3">
+                    <tr class="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                        <td class="px-8 py-4">
+                            <p class="font-medium text-gray-800">{{ $p->mahasiswa->nama ?? 'Tidak diketahui' }}</p>
+                            <p class="text-sm text-gray-500">{{ $p->mahasiswa->nomor_induk ?? '-' }}</p>
+                        </td>
+                        <td class="px-8 py-4">
+                            <p class="font-semibold text-gray-800">Rp {{ number_format($p->total_harga, 0, ',', '.') }}</p>
+                        </td>
+                        <td class="px-8 py-4">
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full capitalize">
+                                {{ str_replace('_', ' ', $p->metode_pembayaran) }}
+                            </span>
+                        </td>
+                        <td class="px-8 py-4">
                             @if($p->status == 'proses')
-                                <span class="px-3 py-1 bg-yellow-200 text-yellow-800 rounded-full text-sm">Diproses</span>
+                                <span class="inline-flex items-center gap-2 px-3 py-1 bg-yellow-100 text-yellow-800 text-sm rounded-full font-medium">
+                                    <span class="w-2 h-2 bg-yellow-600 rounded-full animate-pulse"></span>
+                                    Diproses
+                                </span>
                             @elseif($p->status == 'siap')
-                                <span class="px-3 py-1 bg-blue-200 text-blue-800 rounded-full text-sm">Siap Ambil</span>
+                                <span class="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full font-medium">
+                                    <span class="w-2 h-2 bg-blue-600"></span>
+                                    Siap Ambil
+                                </span>
                             @elseif($p->status == 'selesai')
-                                <span class="px-3 py-1 bg-green-200 text-green-800 rounded-full text-sm">Selesai</span>
+                                <span class="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full font-medium">
+                                    <span class="w-2 h-2 bg-green-600"></span>
+                                    Selesai
+                                </span>
                             @else
-                                <span class="px-3 py-1 bg-red-200 text-red-800 rounded-full text-sm">{{ $p->status }}</span>
+                                <span class="px-3 py-1 bg-gray-100 text-gray-800 text-sm rounded-full capitalize">
+                                    {{ $p->status }}
+                                </span>
                             @endif
                         </td>
-
-                        <td class="p-3">{{ $p->created_at->format('d M Y H:i') }}</td>
-
+                        <td class="px-8 py-4">
+                            <p class="text-gray-800 font-medium">{{ $p->created_at->format('d M Y') }}</p>
+                            <p class="text-sm text-gray-500">{{ $p->created_at->format('H:i') }}</p>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
-
             </table>
-        </div>
         @endif
     </div>
 
 </div>
 
-
-<script src="https://unpkg.com/lucide@latest"></script>
-<script>lucide.createIcons();</script>
-
 @endsection
-
-

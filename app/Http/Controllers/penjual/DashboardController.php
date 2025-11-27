@@ -33,9 +33,7 @@ class DashboardController extends Controller
             ->where('status', 'selesai')
             ->whereDate('created_at', now())
             ->sum('total_harga');
-        // Notifikasi baru - pesanan yang belum diproses (status diproses)
-        $notifikasiBaru = Pesanan::where('id_pedagang', $pedagangId)
-            ->where('status', 'diproses')
+
         // Notifikasi baru
         $notifikasiBaru = Pesanan::where('id_pedagang', $pedagangId)
             ->where('status', 'proses')
@@ -48,21 +46,11 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        // Pesanan masuk yang belum diproses - untuk notifikasi section
-        $pesananMasuk = Pesanan::where('id_pedagang', $pedagangId)
-            ->where('status', 'diproses')
-            ->with(['mahasiswa', 'item.menu'])
-            ->latest()
-            ->take(10)
-            ->get();
         return view('penjual.dashboard', compact(
             'totalMenu',
             'pesananHariIni',
             'pendapatan',
             'notifikasiBaru',
-
-            'pesanan',
-            'pesananMasuk'
             'pesanan'
         ));
     }

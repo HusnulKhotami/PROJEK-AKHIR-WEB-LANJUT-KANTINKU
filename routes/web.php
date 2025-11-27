@@ -61,18 +61,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/pesanan/{id}', [PenjualPesananController::class, 'update'])->name('pesanan.update');
         Route::delete('/pesanan/{id}', [PenjualPesananController::class, 'destroy'])->name('pesanan.destroy');
 
-
-//  MAHASISWA ROUTES
-Route::middleware('auth')
-    ->prefix('mahasiswa')
-    ->name('mahasiswa.')
-    ->group(function () {
-
         // LAPORAN PENJUALAN
         Route::get('/aktivitas', [LogAktivitasController::class, 'index'])->name('aktivitas.index');
+        
         Route::get('/aktivitas/export-pdf', [LogAktivitasController::class, 'exportPdf'])->name('aktivitas.export-pdf');
-        Route::get('/aktivitas/export-excel', [LogAktivitasController::class, 'exportExcel'])->name('aktivitas.export-excel');
-    });
 
         // LAPORAN PENJUALAN
         Route::get('/aktivitas', [LogAktivitasController::class, 'index'])->name('aktivitas.index');
@@ -107,6 +99,8 @@ Route::middleware('auth')
 
         // DETAIL PESANAN (PERBAIKI DI SINI)
         Route::get('/detail-pesanan/{id}', [MahasiswaPesananController::class, 'detail'])->name('detail-pesanan');
+        Route::get('/detail-pesanan/{id}/export-pdf', [MahasiswaPesananController::class, 'exportPdf'])->name('detail-pesanan.export-pdf');
+        Route::get('/detail-pesanan/{id}/export-excel', [MahasiswaPesananController::class, 'exportExcel'])->name('detail-pesanan.export-excel');
         Route::post('/pesanan/{id}/batal', [MahasiswaPesananController::class, 'batal'])->name('pesanan.batal');
         Route::delete('/pesanan/{id}/hapus', [MahasiswaPesananController::class, 'hapusRiwayat'])->name('pesanan.hapus');
 

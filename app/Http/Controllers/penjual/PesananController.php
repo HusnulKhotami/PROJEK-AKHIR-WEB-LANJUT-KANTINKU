@@ -83,6 +83,24 @@ class PesananController extends Controller
         $pesanan->items()->delete();
         $pesanan->delete();
 
+        return redirect()->route('penjual.pesanan.index')
+            ->with('success', 'Status pesanan berhasil diperbarui!');
+    }
+
+    public function destroy($id)
+    {
+        $pedagang = Pedagang::where('user_id', Auth::id())->firstOrFail();
+
+        $pesanan = Pesanan::where('id_pedagang', $pedagang->id)
+            ->findOrFail($id);
+
+        if (!in_array($pesanan->status, ['selesai', 'dibatalkan'])) {
+            return back()->with('error', 'Hanya pesanan selesai atau dibatalkan yang dapat dihapus.');
+        }
+
+        $pesanan->items()->delete();
+        $pesanan->delete();
+
         return back()->with('success', 'Pesanan berhasil dihapus!');
     }
 }
