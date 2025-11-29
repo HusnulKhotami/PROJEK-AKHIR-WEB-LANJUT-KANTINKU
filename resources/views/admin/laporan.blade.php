@@ -112,13 +112,13 @@
     <!-- DOWNLOAD BUTTONS -->
     <div class="flex gap-4">
 
-        <a href="#"
+        <a href="{{ route('admin.laporan.pdf') }}"
            class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition">
             <i data-lucide="file-text" class="w-4 h-4"></i>
             Download PDF
         </a>
 
-        <a href="#"
+        <a href="{{ route('admin.laporan.excel') }}"
            class="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg shadow transition">
             <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
             Download Excel
