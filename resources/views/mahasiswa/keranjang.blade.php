@@ -32,10 +32,8 @@
 
     @else
 
-    {{-- GRID 2 KOLOM --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
-        {{-- KOLOM KIRI: LIST ITEM --}}
         <div class="lg:col-span-2 space-y-5">
             @foreach ($keranjang as $item)
                 @if($item->menu)
@@ -54,17 +52,14 @@
                         </p>
                     </div>
 
-                    {{-- MIN --}}
                     <form action="{{ route('mahasiswa.keranjang.kurang') }}" method="POST">
                         @csrf
                         <input type="hidden" name="id" value="{{ $item->id }}">
                         <button class="bg-gray-200 hover:bg-gray-300 px-3 py-2 rounded-lg font-bold">−</button>
                     </form>
 
-                    {{-- JUMLAH --}}
                     <span class="font-semibold text-lg w-6 text-center">{{ $item->jumlah }}</span>
 
-                    {{-- PLUS --}}
                     <form action="{{ route('mahasiswa.keranjang.tambah') }}" method="POST">
                         @csrf
                         <input type="hidden" name="id_menu" value="{{ $item->menu->id }}">
@@ -72,7 +67,6 @@
                         <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg font-bold">+</button>
                     </form>
 
-                    {{-- HAPUS --}}
                     <form action="{{ route('mahasiswa.keranjang.hapus') }}" method="POST">
                         @csrf
                         <input type="hidden" name="id" value="{{ $item->id }}">
@@ -86,7 +80,6 @@
             @endforeach
         </div>
 
-        {{-- KOLOM KANAN: RINGKASAN --}}
         <div class="bg-white shadow-xl rounded-2xl p-8 border-t-4 border-green-600 h-fit">
 
             <h3 class="text-xl font-bold mb-4">Ringkasan Belanja</h3>

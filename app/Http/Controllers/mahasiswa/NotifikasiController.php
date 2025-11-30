@@ -9,14 +9,12 @@ use Illuminate\Http\Request;
 
 class NotifikasiController extends Controller
 {
-    // Tampilan halaman notifikasi penuh
     public function notifikasi(Request $request)
     {
         $notif = Notifikasi::where('user_id', Auth::id())
             ->latest()
             ->get();
 
-        // untuk AJAX (popup navbar)
         if ($request->ajax()) {
             return response()->json([
                 'count' => Notifikasi::where('user_id', Auth::id())
@@ -32,7 +30,6 @@ class NotifikasiController extends Controller
             ]);
         }
 
-        // untuk halaman notifikasi penuh
         return view('mahasiswa.notifikasi', compact('notif'));
     }
 
@@ -54,4 +51,11 @@ class NotifikasiController extends Controller
 
         return back();
     }
+
+        public function destroyAll()
+    {
+        Notifikasi::where('user_id', Auth::id())->delete();
+        return back();
+    }
+
 }

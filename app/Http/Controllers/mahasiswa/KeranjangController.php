@@ -13,7 +13,7 @@ class KeranjangController extends Controller
     {
         $this->middleware('auth');
     }
-
+    
     // menampilkan halaman keranjang
     public function index()
     {

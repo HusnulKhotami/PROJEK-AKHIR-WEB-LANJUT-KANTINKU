@@ -1,105 +1,119 @@
-@extends('layout.penjual')
+@extends('layout.penjual', [
+    'title' => 'Edit Menu - Penjual',
+    'header' => 'Edit Menu'
+])
 
 @section('content')
 
-<div class="max-w-3xl">
-    <div class="mb-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-2">Edit Menu</h2>
-        <p class="text-gray-600">Perbarui informasi menu Anda</p>
+@if($errors->any())
+<div class="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-xl mb-6 shadow-sm">
+    <ul class="list-disc pl-6">
+        @foreach($errors->all() as $err)
+            <li>{{ $err }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+<form action="{{ route('penjual.menu.update', $menu->id) }}" 
+      method="POST" 
+      enctype="multipart/form-data"
+      class="bg-white p-8 rounded-2xl shadow-lg border border-gray-200 space-y-6 transition">
+
+    @csrf
+    @method('PUT')
+
+    <!-- Nama Menu -->
+    <div>
+        <label class="font-semibold text-gray-700 block mb-1">Nama Menu</label>
+        <input type="text" 
+               name="nama" 
+               value="{{ $menu->nama }}"
+               class="w-full px-4 py-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-green-300 focus:border-green-500 transition"
+               placeholder="Masukkan nama menu"
+               required>
     </div>
 
-    <form action="{{ route('penjual.menu.update', $menu->id) }}" method="POST" enctype="multipart/form-data"
-          class="bg-white rounded-2xl border border-gray-200 shadow-sm p-8 space-y-6">
-        @csrf
-        @method('PUT')
+    <!-- Kategori -->
+    <div>
+        <label class="font-semibold text-gray-700 block mb-1">Kategori</label>
+        <select name="kategori_id"
+                class="w-full px-4 py-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-green-300 focus:border-green-500 transition"
+                required>
+            @foreach($kategori as $k)
+                <option value="{{ $k->id }}" {{ $menu->kategori_id == $k->id ? 'selected' : '' }}>
+                    {{ $k->nama }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 
-        <!-- Nama Menu -->
+    <!-- Deskripsi -->
+    <div>
+        <label class="font-semibold text-gray-700 block mb-1">Deskripsi</label>
+        <textarea name="deskripsi"
+                  rows="3"
+                  class="w-full px-4 py-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-green-300 focus:border-green-500 transition"
+                  placeholder="Masukkan deskripsi menu"
+                  required>{{ $menu->deskripsi }}</textarea>
+    </div>
+
+    <!-- Harga -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-3">
-                <i class="fas fa-tag text-blue-600 mr-2"></i>Nama Menu
-            </label>
-            <input type="text" name="nama" value="{{ $menu->nama }}"
-                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            <label class="font-semibold text-gray-700 block mb-1">Harga</label>
+            <input type="number" 
+                   name="harga" 
+                   value="{{ $menu->harga }}"
+                   class="w-full px-4 py-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-green-300 focus:border-green-500 transition"
+                   placeholder="Contoh: 12000"
                    required>
         </div>
 
-        <!-- Kategori & Harga (2 columns) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-3">
-                    <i class="fas fa-list text-blue-600 mr-2"></i>Kategori
-                </label>
-                <select name="kategori_id" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required>
-                    @foreach($kategori as $k)
-                        <option value="{{ $k->id }}" {{ $menu->kategori_id == $k->id ? 'selected' : '' }}>
-                            {{ $k->nama }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-3">
-                    <i class="fas fa-coins text-blue-600 mr-2"></i>Harga (Rp)
-                </label>
-                <input type="number" name="harga" value="{{ $menu->harga }}"
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                       required>
-            </div>
-        </div>
-
-        <!-- Stok & Gambar (2 columns) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-3">
-                    <i class="fas fa-box text-blue-600 mr-2"></i>Stok
-                </label>
-                <input type="number" name="stok" value="{{ $menu->stok }}"
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                       required>
-            </div>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-3">
-                    <i class="fas fa-image text-blue-600 mr-2"></i>Gambar Menu
-                </label>
-                <input type="file" name="gambar" accept="image/*"
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 file:bg-blue-50 file:border-0 file:rounded file:px-3 file:py-2 file:text-blue-600 file:font-semibold">
-            </div>
-        </div>
-
-        <!-- Current Image Preview -->
-        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-            <p class="text-sm font-semibold text-gray-700 mb-3">Gambar Saat Ini</p>
-            <img src="{{ $menu->gambar_url }}" 
-                 alt="{{ $menu->nama }}" 
-                 class="h-32 w-32 object-cover rounded-lg"
-                 onerror="if(this.src.startsWith('data:')) return; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 300 300%22%3E%3Crect fill=%22%23f3f4f6%22 width=%22300%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 font-size=%2216%22 fill=%22%239ca3af%22 text-anchor=%22middle%22 dy=%22.3em%22%3ENo Image%3C/text%3E%3C/svg%3E';">
-        </div>
-
-        <!-- Deskripsi -->
+        <!-- Stok -->
         <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-3">
-                <i class="fas fa-align-left text-blue-600 mr-2"></i>Deskripsi
-            </label>
-            <textarea name="deskripsi"
-                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                      rows="4">{{ $menu->deskripsi }}</textarea>
+            <label class="font-semibold text-gray-700 block mb-1">Stok</label>
+            <input type="number" 
+                   name="stok" 
+                   value="{{ $menu->stok }}"
+                   class="w-full px-4 py-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition"
+                   placeholder="Jumlah stok"
+                   required>
+        </div>
+    </div>
+
+    <!-- Gambar -->
+    <div>
+        <label class="font-semibold text-gray-700 block mb-2">Gambar Saat Ini</label>
+
+        <div class="flex items-center gap-4 mb-3">
+            <img src="{{ asset('storage/' . $menu->gambar_url) }}"
+                 class="h-24 w-24 rounded-xl object-cover border shadow-sm"
+                 onerror="this.onerror=null; this.src='https://via.placeholder.com/100?text=No+Image';">
         </div>
 
-        <!-- Buttons -->
-        <div class="flex gap-3 pt-6 border-t border-gray-200">
-            <a href="{{ route('penjual.menu.index') }}"
-               class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition-colors text-center">
-                Batal
-            </a>
-            <button type="submit" class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition-colors flex items-center justify-center gap-2">
-                <i class="fas fa-sync"></i>
-                Update Menu
-            </button>
-        </div>
-    </form>
-</div>
+        <input type="file" 
+               name="gambar"
+               class="w-full px-4 py-3 border rounded-xl bg-gray-50 shadow-sm cursor-pointer 
+                      focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition">
+
+        <p class="text-xs text-gray-500 mt-1">Kosongkan jika tidak ingin mengubah gambar</p>
+    </div>
+
+    <!-- Tombol -->
+    <div class="flex justify-end gap-3 pt-4">
+
+        <a href="{{ route('penjual.menu.index') }}"
+           class="px-6 py-3 rounded-xl bg-gray-200 text-gray-700 hover:bg-gray-300 transition shadow-sm">
+            Batal
+        </a>
+
+        <button class="px-6 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 shadow-md transition">
+            Update Menu
+        </button>
+
+    </div>
+
+</form>
 
 @endsection

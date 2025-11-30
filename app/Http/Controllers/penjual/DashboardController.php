@@ -23,12 +23,12 @@ class DashboardController extends Controller
         // Total menu
         $totalMenu = Menu::where('id_pedagang', $pedagangId)->count();
 
-        // Pesanan hari ini (semua status)
+        // Pesanan hari ini
         $pesananHariIni = Pesanan::where('id_pedagang', $pedagangId)
             ->whereDate('created_at', now())
             ->count();
 
-        // Pendapatan hari ini — hanya pesanan selesai
+        // Pendapatan hari ini
         $pendapatan = Pesanan::where('id_pedagang', $pedagangId)
             ->where('status', 'selesai')
             ->whereDate('created_at', now())
@@ -46,12 +46,21 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // Pesanan masuk untuk notifikasi section
+        $pesananMasuk = Pesanan::where('id_pedagang', $pedagangId)
+            ->where('status', 'diproses')
+            ->with(['mahasiswa', 'items.menu'])
+            ->latest()
+            ->take(10)
+            ->get();
+
         return view('penjual.dashboard', compact(
             'totalMenu',
             'pesananHariIni',
             'pendapatan',
             'notifikasiBaru',
-            'pesanan'
+            'pesanan',
+            'pesananMasuk'
         ));
     }
 }

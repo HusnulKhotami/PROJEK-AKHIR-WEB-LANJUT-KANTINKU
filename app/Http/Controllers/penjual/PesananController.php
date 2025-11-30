@@ -34,24 +34,20 @@ class PesananController extends Controller
         $pesanan = Pesanan::where('id_pedagang', $pedagang->id)
             ->findOrFail($id);
 
-        // Jika dibatalkan → hapus pesanan
+        // oesanan dibatalkan diapus
         if ($request->status == 'dibatalkan') {
 
-            // Hapus item di pesanan
             $pesanan->items()->delete();
-
-            // Hapus pesanan
             $pesanan->delete();
 
             return redirect()->route('penjual.pesanan.index')
                 ->with('success', 'Pesanan berhasil dibatalkan & dihapus!');
         }
 
-        // Update status lainnya
         $pesanan->update([
             'status' => $request->status
         ]);
-        // Pesan notif otomatis
+   
         $pesanNotif = match ($request->status) {
             'proses'  => 'Pesanan kamu sedang diproses penjual.',
             'siap'    => 'Pesanan kamu sudah siap diambil!',
@@ -85,22 +81,5 @@ class PesananController extends Controller
 
         return redirect()->route('penjual.pesanan.index')
             ->with('success', 'Status pesanan berhasil diperbarui!');
-    }
-
-    public function destroy($id)
-    {
-        $pedagang = Pedagang::where('user_id', Auth::id())->firstOrFail();
-
-        $pesanan = Pesanan::where('id_pedagang', $pedagang->id)
-            ->findOrFail($id);
-
-        if (!in_array($pesanan->status, ['selesai', 'dibatalkan'])) {
-            return back()->with('error', 'Hanya pesanan selesai atau dibatalkan yang dapat dihapus.');
-        }
-
-        $pesanan->items()->delete();
-        $pesanan->delete();
-
-        return back()->with('success', 'Pesanan berhasil dihapus!');
     }
 }

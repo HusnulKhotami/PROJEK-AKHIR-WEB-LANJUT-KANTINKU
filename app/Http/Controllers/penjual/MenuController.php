@@ -18,16 +18,28 @@ class MenuController extends Controller
         return $pedagang->id;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $pedagangId = $this->pedagangId();
 
+        $search = $request->search;
+        $kategoriFilter = $request->kategori;
+
+        $kategori = KategoriMenu::all();
+
         $menu = Menu::where('id_pedagang', $pedagangId)
+                    ->when($search, function($q) use ($search) {
+                        // Case-insensitive search
+                        $q->whereRaw('LOWER(nama) LIKE ?', ['%' . strtolower($search) . '%']);
+                    })
+                    ->when($kategoriFilter, function($q) use ($kategoriFilter) {
+                        $q->where('kategori_id', $kategoriFilter);
+                    })
                     ->with('kategori')
                     ->latest()
                     ->get();
 
-        return view('penjual.menu.index', compact('menu'));
+        return view('penjual.menu.index', compact('menu', 'kategori', 'search', 'kategoriFilter'));
     }
 
     public function create()
