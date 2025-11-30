@@ -1,46 +1,10 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layout.admin')
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Detail Transaksi | KantinKu</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-</head>
+@section('title', 'Detail Transaksi | KantinKu')
 
-<body class="bg-gray-100 font-sans text-gray-800">
+@section('content')
 
-<div class="flex min-h-screen">
-
-  <!-- SIDEBAR -->
-  <aside class="bg-green-700 text-white w-64 flex flex-col shadow-xl">
-    <div class="p-6 text-center border-b border-green-600">
-      <h1 class="text-3xl font-bold tracking-wide">KantinKu</h1>
-      <p class="text-sm opacity-80 mt-1">Dashboard Admin</p>
-    </div>
-
-    <nav class="flex-1 px-4 py-6 space-y-3">
-
-      <x-sidebar-item icon="home" text="Dashboard" url="/admin/dashboard" />
-      <x-sidebar-item icon="users" text="Data Pengguna" url="/admin/pengguna" />
-      <x-sidebar-item icon="shopping-bag" text="Transaksi" url="/admin/transaksi" active="true" />
-      <x-sidebar-item icon="bar-chart-2" text="Laporan" url="/admin/laporan" />
-      <x-sidebar-item icon="activity" text="Monitoring" url="/admin/monitoring" />
-
-    </nav>
-
-    <form method="POST" action="{{ route('logout') }}" class="p-4 border-t border-green-600">
-      @csrf
-      <button type="submit"
-        class="flex items-center gap-2 w-full justify-center bg-green-800 hover:bg-green-900 rounded-lg py-2 transition font-medium">
-        <i data-lucide="log-out" class="w-4 h-4"></i> Logout
-      </button>
-    </form>
-  </aside>
-
-  <!-- MAIN CONTENT -->
-  <main class="flex-1 p-10">
+<main class="flex-1 p-10">
 
     <!-- HEADER -->
     <div class="flex items-center justify-between mb-10">
@@ -113,11 +77,5 @@
     </div>
 
   </main>
-</div>
 
-<script>
-  lucide.createIcons();
-</script>
-
-</body>
-</html>
+@endsection
