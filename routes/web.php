@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-use App\Http\Controllers\auth\LoginController;
-use App\Http\Controllers\auth\RegisterController;
-use App\Http\Controllers\auth\VerificationController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\VerificationController;
 
 use App\Http\Controllers\mahasiswa\MenuController as MahasiswaMenuController;
 use App\Http\Controllers\mahasiswa\KeranjangController;
@@ -55,18 +55,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('/menu', PenjualMenuController::class);
         // PESANAN MASUK
         Route::get('/pesanan', [PenjualPesananController::class, 'index'])->name('pesanan.index');
-
         Route::get('/pesanan/{id}/edit', [PenjualPesananController::class, 'edit'])->name('pesanan.edit');
-
         Route::put('/pesanan/{id}', [PenjualPesananController::class, 'update'])->name('pesanan.update');
         Route::delete('/pesanan/{id}', [PenjualPesananController::class, 'destroy'])->name('pesanan.destroy');
 
         // LAPORAN PENJUALAN
-        Route::get('/aktivitas', [LogAktivitasController::class, 'index'])->name('aktivitas.index');
-        
-        Route::get('/aktivitas/export-pdf', [LogAktivitasController::class, 'exportPdf'])->name('aktivitas.export-pdf');
-
-        // LAPORAN PENJUALAN
+    
         Route::get('/aktivitas', [LogAktivitasController::class, 'index'])->name('aktivitas.index');
         
         Route::get('/aktivitas/export-pdf', [LogAktivitasController::class, 'exportPdf'])->name('aktivitas.export-pdf');
@@ -87,6 +81,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/notifikasi', [NotifikasiController::class, 'notifikasi'])->name('notifikasi');
         Route::post('/notifikasi/{id}/read', [NotifikasiController::class, 'read'])->name('notifikasi.read');
         Route::delete('/notifikasi/{id}/hapus', [NotifikasiController::class, 'destroy'])->name('notifikasi.hapus');
+       // HAPUS SEMUA NOTIFIKASI
+        Route::delete('/notifikasi/hapus-semua', [NotifikasiController::class, 'destroyAll'])->name('notifikasi.hapusAll');
 
         // Keranjang
         Route::get('/keranjang', [KeranjangController::class, 'index'])->name('keranjang');
@@ -104,5 +100,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/pesanan/{id}/batal', [MahasiswaPesananController::class, 'batal'])->name('pesanan.batal');
         Route::delete('/pesanan/{id}/hapus', [MahasiswaPesananController::class, 'hapusRiwayat'])->name('pesanan.hapus');
 
-    });
+
+
+    // MIDTRANS ROUTES
+        Route::get('/pembayaran/{id}', 
+            [CheckoutController::class, 'halamanPembayaran'])->name('pembayaran');
+
+        Route::post('/midtrans/snap-token', 
+            [CheckoutController::class, 'getSnapToken'])->name('midtrans.snap-token');  
+
+        Route::post('/midtrans/callback', 
+            [CheckoutController::class, 'callback'])->name('midtrans.callback');
+
+            });
 });

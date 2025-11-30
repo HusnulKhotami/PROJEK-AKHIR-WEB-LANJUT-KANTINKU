@@ -17,13 +17,11 @@ class Pedagang extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    // ✅ Relasi ke menu
     public function menu()
     {
         return $this->hasMany(Menu::class, 'id_pedagang');
     }
 
-    // ✅ Relasi ke pesanan
     public function pesanan()
     {
         return $this->hasMany(Pesanan::class, 'id_pedagang');

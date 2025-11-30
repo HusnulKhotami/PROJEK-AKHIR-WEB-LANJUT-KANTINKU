@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Menu;
 use App\Models\Pesanan;
-use App\Models\Notifikasi;
 use App\Models\Pedagang;
 
 class DashboardController extends Controller
@@ -34,7 +33,6 @@ class DashboardController extends Controller
             ->where('status', 'selesai')
             ->whereDate('created_at', now())
             ->sum('total_harga');
-
 
         // Notifikasi baru
         $notifikasiBaru = Pesanan::where('id_pedagang', $pedagangId)
