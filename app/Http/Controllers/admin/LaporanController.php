@@ -3,63 +3,68 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Transaksi;
+use App\Models\Pesanan;
+
+// PDF & Excel
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TransaksiExport;
 
 class LaporanController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Tampilkan halaman laporan keuangan.
      */
     public function index()
     {
-        //
+        // Total transaksi (berdasarkan pesanan)
+        $totalTransaksi = Pesanan::count();
+
+        // Total pendapatan berdasarkan transaksi paid
+        $totalPendapatan = Transaksi::where('status', 'paid')->sum('jumlah');
+
+        // Transaksi terbaru untuk tabel laporan
+        $transaksiTerbaru = Transaksi::with(['pesanan.mahasiswa'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('admin.laporan.index', compact(
+            'totalTransaksi',
+            'totalPendapatan',
+            'transaksiTerbaru'
+        ));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
-     * Store a newly created resource in storage.
+     * Download PDF laporan dengan timestamp.
      */
-    public function store(Request $request)
+    public function downloadPdf()
     {
-        //
+        $timestamp = now()->format('Y-m-d_H-i-s');
+
+        $data = [
+            'totalTransaksi'   => Pesanan::count(),
+            'totalPendapatan'  => Transaksi::where('status', 'paid')->sum('jumlah'),
+            'transaksiTerbaru' => Transaksi::with(['pesanan.mahasiswa'])
+                                    ->orderByDesc('created_at')
+                                    ->get(),
+        ];
+
+        $pdf = Pdf::loadView('admin.laporan.pdf', $data);
+
+        return $pdf->download("laporan-keuangan-kantinku_{$timestamp}.pdf");
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
     /**
-     * Show the form for editing the specified resource.
+     * Download Excel laporan dengan timestamp.
      */
-    public function edit(string $id)
+    public function downloadExcel()
     {
-        //
-    }
+        $timestamp = now()->format('Y-m-d_H-i-s');
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return Excel::download(new TransaksiExport, "laporan-transaksi-kantinku_{$timestamp}.xlsx");
     }
 }

@@ -19,12 +19,19 @@ use App\Http\Controllers\penjual\PesananController as PenjualPesananController;
 use App\Http\Controllers\penjual\LaporanController;
 use App\Http\Controllers\penjual\LogAktivitasController;
 
+// ADMIN CONTROLLERS
+use App\Http\Controllers\admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\admin\LaporanController as AdminLaporanController;
+use App\Http\Controllers\admin\LogAktvitasController as AdminLogAktivitasController;
+use App\Http\Controllers\admin\UserController as AdminUserController;
+use App\Http\Controllers\admin\TransaksiController as AdminTransaksiController;
+
 Route::get('/', fn() => view('index'))->name('home');
 Route::get('/fitur', fn() => view('landing.fitur'))->name('fitur');
 Route::get('/menu', fn() => view('landing.menu'))->name('menu');
 Route::get('/tentang', fn() => view('landing.tentang-kantin'))->name('tentang');
 
-//auntifikasi register login
+// AUTENTIKASI LOGIN / REGISTER
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
@@ -43,32 +50,56 @@ Route::post('/email/verification-notification', [VerificationController::class, 
     ->middleware(['auth', 'throttle:6,1'])
     ->name('verification.send');
 
-//akses login dulu
+// HANYA UNTUK USER LOGIN DAN VERIFIED
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::get('/admin/dashboard', fn() => view('admin.dashboard'))->name('admin.dashboard');
+    /* ================== ADMIN ================== */
+    Route::prefix('admin')->middleware(['auth'])->group(function () {
 
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+
+        // LAPORAN KEUANGAN + DOWNLOAD PDF / EXCEL (BARU DITAMBAHKAN)
+        Route::get('/laporan',        [AdminLaporanController::class, 'index'])->name('admin.laporan');
+        Route::get('/laporan/pdf',    [AdminLaporanController::class, 'downloadPdf'])->name('admin.laporan.pdf');
+        Route::get('/laporan/excel',  [AdminLaporanController::class, 'downloadExcel'])->name('admin.laporan.excel');
+
+        // MONITORING SISTEM
+        Route::get('/monitoring', [AdminLogAktivitasController::class, 'index'])->name('admin.monitoring');
+
+        // MANAJEMEN PENGGUNA
+        Route::get('/pengguna', [AdminUserController::class, 'index'])->name('admin.pengguna');
+        Route::get('/pengguna/create', [AdminUserController::class, 'create'])->name('admin.pengguna.create');
+        Route::post('/pengguna', [AdminUserController::class, 'store'])->name('admin.pengguna.store');
+        Route::get('/pengguna/{id}/edit', [AdminUserController::class, 'edit'])->name('admin.pengguna.edit');
+        Route::put('/pengguna/{id}', [AdminUserController::class, 'update'])->name('admin.pengguna.update');
+        Route::get('/pengguna/{id}/hapus', [AdminUserController::class, 'confirmDelete'])->name('admin.pengguna.hapus');
+        Route::delete('/pengguna/{id}', [AdminUserController::class, 'destroy'])->name('admin.pengguna.destroy');
+
+        // MANAJEMEN TRANSAKSI
+        Route::get('/transaksi', [AdminTransaksiController::class, 'index'])->name('admin.transaksi');
+        Route::get('/transaksi/{id}', [AdminTransaksiController::class, 'detail'])->name('admin.transaksi.detail');
+    });
+
+    /* ================== PENJUAL ================== */
     Route::prefix('penjual')->name('penjual.')->group(function () {
 
-        Route::get('/dashboard', [DashboardController::class, 'index']) ->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::resource('/menu', PenjualMenuController::class);
+
         // PESANAN MASUK
         Route::get('/pesanan', [PenjualPesananController::class, 'index'])->name('pesanan.index');
         Route::get('/pesanan/{id}/edit', [PenjualPesananController::class, 'edit'])->name('pesanan.edit');
         Route::put('/pesanan/{id}', [PenjualPesananController::class, 'update'])->name('pesanan.update');
         Route::delete('/pesanan/{id}', [PenjualPesananController::class, 'destroy'])->name('pesanan.destroy');
 
-        // LAPORAN PENJUALAN
-    
+        // Aktivitas (PDF + Excel)
         Route::get('/aktivitas', [LogAktivitasController::class, 'index'])->name('aktivitas.index');
-        
         Route::get('/aktivitas/export-pdf', [LogAktivitasController::class, 'exportPdf'])->name('aktivitas.export-pdf');
-
         Route::get('/aktivitas/export-excel', [LogAktivitasController::class, 'exportExcel'])->name('aktivitas.export-excel');
     });
 
-    //mahasiswa
+    /* ================== MAHASISWA ================== */
     Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {
 
         Route::get('/dashboard', fn() => view('mahasiswa.dashboard'))->name('dashboard');
@@ -93,7 +124,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Checkout
         Route::post('/keranjang/checkout', [CheckoutController::class, 'checkout'])->name('keranjang.checkout');
 
-        // DETAIL PESANAN (PERBAIKI DI SINI)
+        // DETAIL PESANAN
         Route::get('/detail-pesanan/{id}', [MahasiswaPesananController::class, 'detail'])->name('detail-pesanan');
         Route::get('/detail-pesanan/{id}/export-pdf', [MahasiswaPesananController::class, 'exportPdf'])->name('detail-pesanan.export-pdf');
         Route::get('/detail-pesanan/{id}/export-excel', [MahasiswaPesananController::class, 'exportExcel'])->name('detail-pesanan.export-excel');
