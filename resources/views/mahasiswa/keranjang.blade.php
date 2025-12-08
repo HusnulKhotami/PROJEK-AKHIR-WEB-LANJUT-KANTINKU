@@ -110,7 +110,7 @@
                     class="w-full border rounded-xl p-3 mb-6 focus:ring-green-500" required>
                     <option value="">-- Pilih Metode --</option>
                     <option value="cash">Cash</option>
-                    <option value="ewallet">E-Wallet</option>
+                    {{-- <option value="ewallet">E-Wallet</option> --}}
                     <option value="transfer">Transfer Bank</option>
                 </select>
 

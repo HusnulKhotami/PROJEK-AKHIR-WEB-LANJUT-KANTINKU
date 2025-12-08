@@ -2,14 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Transaksi extends Model
 {
-    use HasFactory;
-
-    protected $table = "transaksi";
+    protected $table = 'transaksi';
 
     protected $fillable = [
         'id_pesanan',
@@ -17,10 +14,14 @@ class Transaksi extends Model
         'metode_pembayaran',
         'status',
         'payment_date',
+        'created_at',
+        'updated_at'
     ];
+
+    public $timestamps = true;
 
     public function pesanan()
     {
-        return $this->belongsTo(Pesanan::class, 'id_pesanan');
+        return $this->belongsTo(\App\Models\Pesanan::class, 'id_pesanan');
     }
 }

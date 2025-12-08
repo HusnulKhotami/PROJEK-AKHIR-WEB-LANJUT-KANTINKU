@@ -25,6 +25,7 @@ use App\Http\Controllers\admin\LaporanController as AdminLaporanController;
 use App\Http\Controllers\admin\LogAktvitasController as AdminLogAktivitasController;
 use App\Http\Controllers\admin\UserController as AdminUserController;
 use App\Http\Controllers\admin\TransaksiController as AdminTransaksiController;
+use App\Http\Controllers\MidtransController;
 
 Route::get('/', fn() => view('index'))->name('home');
 Route::get('/fitur', fn() => view('landing.fitur'))->name('fitur');
@@ -49,6 +50,7 @@ Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'
 Route::post('/email/verification-notification', [VerificationController::class, 'send'])
     ->middleware(['auth', 'throttle:6,1'])
     ->name('verification.send');
+
 
 // HANYA UNTUK USER LOGIN DAN VERIFIED
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -123,6 +125,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Checkout
         Route::post('/keranjang/checkout', [CheckoutController::class, 'checkout'])->name('keranjang.checkout');
+
 
         // DETAIL PESANAN
         Route::get('/detail-pesanan/{id}', [MahasiswaPesananController::class, 'detail'])->name('detail-pesanan');
