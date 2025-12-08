@@ -54,10 +54,10 @@
 
     </div>
 
-    <!-- Fitur -->
+    <!-- FITUR ADMIN -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        <!-- Data Pengguna -->
+        <!-- DATA PENGGUNA -->
         <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between">
             <div>
                 <i data-lucide="users" class="w-10 h-10 text-green-600 mb-4"></i>
@@ -72,13 +72,13 @@
             </a>
         </div>
 
-        <!-- Transaksi -->
+        <!-- TRANSAKSI -->
         <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between">
             <div>
                 <i data-lucide="shopping-bag" class="w-10 h-10 text-green-600 mb-4"></i>
                 <h3 class="text-lg font-bold mb-2">Manajemen Transaksi</h3>
                 <p class="text-gray-600 text-sm">
-                    Lihat dan pantau seluruh transaksi dan status pembayaran.
+                    Lihat seluruh transaksi dan ekspor laporan.
                 </p>
             </div>
             <a href="{{ route('admin.transaksi') }}"
@@ -87,33 +87,18 @@
             </a>
         </div>
 
-        <!-- Laporan -->
+        <!-- VALIDASI PEMBAYARAN -->
         <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between">
             <div>
-                <i data-lucide="bar-chart-2" class="w-10 h-10 text-green-600 mb-4"></i>
-                <h3 class="text-lg font-bold mb-2">Laporan Keuangan & Pesanan</h3>
+                <i data-lucide="check-circle" class="w-10 h-10 text-green-600 mb-4"></i>
+                <h3 class="text-lg font-bold mb-2">Validasi Pembayaran</h3>
                 <p class="text-gray-600 text-sm">
-                    Rekap data transaksi, ekspor ke PDF atau Excel.
+                    Validasi pembayaran pesanan cash yang belum ditandai lunas.
                 </p>
             </div>
-            <a href="{{ route('admin.laporan') }}"
+            <a href="{{ route('admin.validasi') }}"
                 class="mt-4 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition text-center">
-                Unduh Laporan
-            </a>
-        </div>
-
-        <!-- Monitoring -->
-        <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition flex flex-col justify-between">
-            <div>
-                <i data-lucide="activity" class="w-10 h-10 text-green-600 mb-4"></i>
-                <h3 class="text-lg font-bold mb-2">Monitoring Aktivitas Sistem</h3>
-                <p class="text-gray-600 text-sm">
-                    Pantau aktivitas mahasiswa dan penjual secara real-time.
-                </p>
-            </div>
-            <a href="{{ route('admin.monitoring') }}"
-                class="mt-4 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition text-center">
-                Pantau Sekarang
+                Validasi Sekarang
             </a>
         </div>
 

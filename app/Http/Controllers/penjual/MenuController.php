@@ -14,8 +14,15 @@ class MenuController extends Controller
     private function pedagangId()
     {
         $pedagang = Pedagang::where('user_id', Auth::id())->first();
-
         return $pedagang->id;
+    }
+
+    /**
+     * Path folder gambar (public_html/image/menu)
+     */
+    private function uploadPath()
+    {
+        return base_path('../public_html/image/menu');
     }
 
     public function index(Request $request)
@@ -29,7 +36,6 @@ class MenuController extends Controller
 
         $menu = Menu::where('id_pedagang', $pedagangId)
                     ->when($search, function($q) use ($search) {
-                        // Case-insensitive search
                         $q->whereRaw('LOWER(nama) LIKE ?', ['%' . strtolower($search) . '%']);
                     })
                     ->when($kategoriFilter, function($q) use ($kategoriFilter) {
@@ -59,9 +65,14 @@ class MenuController extends Controller
             'gambar' => 'nullable|image|max:2048',
         ]);
 
-        $path = null;
+        $fileName = null;
+
         if ($request->hasFile('gambar')) {
-            $path = $request->file('gambar')->store('image/menu', 'public');
+            // Nama file unik
+            $fileName = time() . '-' . uniqid() . '.' . $request->gambar->extension();
+
+            // Pindahkan file ke public_html/image/menu/
+            $request->gambar->move($this->uploadPath(), $fileName);
         }
 
         Menu::create([
@@ -71,7 +82,7 @@ class MenuController extends Controller
             'deskripsi' => $request->deskripsi,
             'harga' => $request->harga,
             'stok' => $request->stok,
-            'gambar_url' => $path,
+            'gambar_url' => $fileName, // hanya nama file saja
         ]);
 
         return redirect()->route('penjual.menu.index')->with('success', 'Menu berhasil ditambahkan.');
@@ -90,7 +101,6 @@ class MenuController extends Controller
     public function update(Request $request, string $id)
     {
         $pedagangId = $this->pedagangId();
-
         $menu = Menu::where('id_pedagang', $pedagangId)->findOrFail($id);
 
         $request->validate([
@@ -102,10 +112,19 @@ class MenuController extends Controller
             'gambar' => 'nullable|image|max:2048',
         ]);
 
+        // Upload gambar baru jika ada
         if ($request->hasFile('gambar')) {
-            $menu->gambar_url = $request->file('gambar')->store('image/menu', 'public');
+
+            $fileName = time() . '-' . uniqid() . '.' . $request->gambar->extension();
+
+            // Upload file ke public_html/image/menu/
+            $request->gambar->move($this->uploadPath(), $fileName);
+
+            // Update nama gambar
+            $menu->gambar_url = $fileName;
         }
 
+        // Update field lainnya
         $menu->update([
             'kategori_id' => $request->kategori_id,
             'nama' => $request->nama,
@@ -121,8 +140,8 @@ class MenuController extends Controller
     public function destroy(string $id)
     {
         $pedagangId = $this->pedagangId();
-
         $menu = Menu::where('id_pedagang', $pedagangId)->findOrFail($id);
+
         $menu->delete();
 
         return redirect()->route('penjual.menu.index')->with('success', 'Menu berhasil dihapus.');

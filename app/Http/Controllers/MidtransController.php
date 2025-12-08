@@ -36,7 +36,7 @@ class MidtransController extends Controller
         if ($request->transaction_status === 'capture' || $request->transaction_status === 'settlement') {
             $pesanan->update([
                 'status_pembayaran' => 'success',
-                'status' => 'siap'
+                'status' => 'proses'
             ]);
 
             $statusTransaksi = 'paid';
