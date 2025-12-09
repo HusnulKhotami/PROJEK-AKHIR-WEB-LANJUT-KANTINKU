@@ -255,7 +255,7 @@
             <i class="fas fa-file-pdf"></i>
             Export PDF
         </a>
-        <a href="{{ route('penjual.aktivitas.export-excel', ['periode' => $periode, 'bulan' => $bulan, 'tahun' => $tahun, 'tanggal' => request('tanggal')]) }}" 
+        <a href="{{ route('penjual.aktivitas.export-csv', ['periode' => $periode, 'bulan' => $bulan, 'tahun' => $tahun, 'tanggal' => request('tanggal')]) }}" 
         class="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold transition-colors shadow-sm">
             <i class="fas fa-file-excel"></i>
             Export Excel

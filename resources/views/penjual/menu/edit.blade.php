@@ -58,7 +58,7 @@
                   required>{{ $menu->deskripsi }}</textarea>
     </div>
 
-    <!-- Harga -->
+    <!-- Harga & Stok -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
             <label class="font-semibold text-gray-700 block mb-1">Harga</label>
@@ -70,7 +70,6 @@
                    required>
         </div>
 
-        <!-- Stok -->
         <div>
             <label class="font-semibold text-gray-700 block mb-1">Stok</label>
             <input type="number" 
@@ -87,7 +86,8 @@
         <label class="font-semibold text-gray-700 block mb-2">Gambar Saat Ini</label>
 
         <div class="flex items-center gap-4 mb-3">
-            <img src="{{ asset('storage/' . $menu->gambar_url) }}"
+            <img src="{{ $menu->gambar_url }}"
+                 alt="Gambar Menu"
                  class="h-24 w-24 rounded-xl object-cover border shadow-sm"
                  onerror="this.onerror=null; this.src='https://via.placeholder.com/100?text=No+Image';">
         </div>
@@ -102,7 +102,6 @@
 
     <!-- Tombol -->
     <div class="flex justify-end gap-3 pt-4">
-
         <a href="{{ route('penjual.menu.index') }}"
            class="px-6 py-3 rounded-xl bg-gray-200 text-gray-700 hover:bg-gray-300 transition shadow-sm">
             Batal
@@ -111,7 +110,6 @@
         <button class="px-6 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 shadow-md transition">
             Update Menu
         </button>
-
     </div>
 
 </form>

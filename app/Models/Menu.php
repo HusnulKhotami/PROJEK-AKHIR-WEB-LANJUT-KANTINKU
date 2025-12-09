@@ -26,27 +26,28 @@ class Menu extends Model
         return $this->belongsTo(KategoriMenu::class, 'kategori_id');
     }
 
-    /**
-     * Accessor gambar_url → otomatis menghasilkan asset('storage/menu/...').
-     */
-    public function pedagang(){
-        
+    public function pedagang()
+    {
         return $this->belongsTo(Pedagang::class, 'id_pedagang');
     }
+
+    /**
+     * Accessor untuk gambar_url agar otomatis mengarah ke /image/menu/
+     * sesuai dengan struktur hosting kamu.
+     */
     public function getGambarUrlAttribute($value)
     {
-      
-        // Jika tidak ada gambar → pakai default
+        // Jika tidak ada gambar → fallback default
         if (!$value) {
-            return asset('storage/menu/default.png');
+            return url('image/menu/default.png');
         }
 
-        // Jika URL penuh sudah http
+        // Jika sudah URL lengkap (http/https), langsung kembalikan
         if (str_starts_with($value, 'http')) {
             return $value;
         }
 
-        // Pastikan path benar: storage/menu/namafile.jpg
-        return asset('storage/' . $value);
+        // Jika nama file saja → arahkan ke /image/menu/NAMA_FILE
+        return url('image/menu/' . $value);
     }
 }

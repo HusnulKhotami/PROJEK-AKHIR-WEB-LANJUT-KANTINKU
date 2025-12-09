@@ -36,6 +36,18 @@
       <strong>Metode Pembayaran:</strong> {{ ucfirst($pesanan->metode_pembayaran) }}
     </p>
 
+    <p class="text-lg mb-3">
+      <strong>Status Pembayaran:</strong>
+    
+      @if ($pesanan->status_pembayaran === 'success')
+          <span class="font-bold text-green-600">Berhasil</span>
+      @elseif ($pesanan->status_pembayaran === 'pending')
+          <span class="font-bold text-yellow-500">Pending</span>
+      @else
+          <span class="font-bold text-red-600">Gagal</span>
+      @endif
+    </p>
+
     {{-- ✔️ Tambahkan catatan pembeli di sini --}}
     @if ($pesanan->catatan)
     <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-300 mb-4">

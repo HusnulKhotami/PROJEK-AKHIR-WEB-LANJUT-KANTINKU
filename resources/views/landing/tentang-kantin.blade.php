@@ -55,7 +55,7 @@
         ['name' => 'Husnul', 'role' => 'Pengembang 1', 'img' => 'husnul.jpg'],
         ['name' => 'Elena', 'role' => 'Pengembang 2', 'img' => 'elena.jpg'],
         ['name' => 'Adin', 'role' => 'Pengembang 3', 'img' => 'adin.jpg'],
-        ['name' => 'Kating', 'role' => 'Pengembang 4', 'img' => 'kating.jpg']
+        ['name' => 'Kania', 'role' => 'Pengembang 4', 'img' => 'kania.jpg']
       ] as $member)
       <div class="bg-green-50 rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2 p-6">
         <img src="{{ asset('image/team/' . $member['img']) }}" 

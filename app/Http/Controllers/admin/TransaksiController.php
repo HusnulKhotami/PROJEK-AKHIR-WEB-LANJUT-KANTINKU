@@ -4,33 +4,36 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transaksi;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use PDF;
 
 class TransaksiController extends Controller
 {
     /**
-     * Tampilkan daftar transaksi di halaman admin.
+     * Build koleksi DTO transaksi
      */
-    public function index()
+    protected function buildTransaksiCollection($rawTransaksi = null): Collection
     {
-        // Ambil semua transaksi beserta relasi pesanan dan mahasiswa (user)
-        $rawTransaksi = Transaksi::with(['pesanan.mahasiswa', 'pesanan.items'])
-            ->orderByDesc('created_at')
-            ->get();
+        if ($rawTransaksi === null) {
+            $rawTransaksi = Transaksi::with(['pesanan.mahasiswa', 'pesanan.items', 'pesanan.pedagang'])
+                ->orderByDesc('created_at')
+                ->get();
+        }
 
-        // Bentuk objek yang lebih mudah dipakai di Blade (sesuai yang sudah ada di view)
-        $transaksi = $rawTransaksi->map(function ($trx) {
+        return $rawTransaksi->map(function ($trx) {
             $pesanan   = $trx->pesanan;
             $mahasiswa = optional($pesanan)->mahasiswa;
             $items     = optional($pesanan)->items ?? collect();
 
-            $dto              = new \stdClass();
-            $dto->id          = $trx->id;
+            $dto               = new \stdClass();
+            $dto->id           = $trx->id;
             $dto->id_transaksi = 'TRX' . str_pad($trx->id, 3, '0', STR_PAD_LEFT);
             $dto->nama_pemesan = $mahasiswa->nama ?? '-';
             $dto->item         = $items->count() . ' item';
             $dto->total        = $trx->jumlah;
 
-            // Mapping status untuk tampilan
+            // Mapping status Midtrans -> label tampilan
             $status = $trx->status;
             if ($status === 'paid') {
                 $dto->status = 'Berhasil';
@@ -42,18 +45,62 @@ class TransaksiController extends Controller
                 $dto->status = ucfirst($status);
             }
 
-            $dto->status_raw   = $status;
-            $dto->payment_date = $trx->payment_date;
-            $dto->created_at   = $trx->created_at;
+            $dto->status_raw = $status;
+
+            // ========== FIX TANGGAL AGAR MUNCUL DI PDF ==========
+            $actualDate = $trx->payment_date ?? $trx->created_at;
+            $dto->tanggal = optional($actualDate)->format('d-m-Y H:i');
 
             return $dto;
         });
-
-        return view('admin.transaksi.index', compact('transaksi'));
     }
 
     /**
-     * Detail transaksi tertentu.
+     * Halaman transaksi + FILTER status & tanggal
+     */
+    public function index(Request $request)
+    {
+        $filterStatus  = $request->status;   // Berhasil | Pending | Gagal
+        $filterTanggal = $request->tanggal;  // yyyy-mm-dd
+
+        // Query dasar ke DB (filter di level DB agar efisien)
+        $query = Transaksi::with(['pesanan.mahasiswa', 'pesanan.items', 'pesanan.pedagang'])
+            ->orderByDesc('created_at');
+
+        // Filter status (pakai status raw Midtrans)
+        if ($filterStatus) {
+            $map = [
+                'Berhasil' => 'paid',
+                'Pending'  => 'pending',
+                'Gagal'    => 'failed',
+            ];
+
+            $raw = $map[$filterStatus] ?? null;
+            if ($raw) {
+                $query->where('status', $raw);
+            }
+        }
+
+        // Filter tanggal
+        if ($filterTanggal) {
+            $query->whereDate(\DB::raw('COALESCE(payment_date, created_at)'), $filterTanggal);
+        }
+
+        // Ambil hasil query
+        $rawTransaksi = $query->get();
+
+        // Bentuk DTO
+        $transaksi = $this->buildTransaksiCollection($rawTransaksi);
+
+        return view('admin.transaksi.index', [
+            'transaksi' => $transaksi,
+            'status'    => $filterStatus,
+            'tanggal'   => $filterTanggal,
+        ]);
+    }
+
+    /**
+     * Detail transaksi
      */
     public function detail($id)
     {
@@ -72,5 +119,57 @@ class TransaksiController extends Controller
             'items',
             'pedagang'
         ));
+    }
+
+    /**
+     * Export PDF
+     */
+    public function exportPdf()
+    {
+        $transaksi = $this->buildTransaksiCollection();
+
+        $pdf = PDF::loadView('admin.transaksi.export-pdf', compact('transaksi'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download('laporan-transaksi.pdf');
+    }
+
+    /**
+     * Export CSV
+     */
+    public function exportExcel()
+    {
+        $transaksi = $this->buildTransaksiCollection();
+        $fileName  = 'laporan-transaksi.csv';
+
+        $headers = [
+            'Content-Type'        => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+        ];
+
+        $callback = function () use ($transaksi) {
+            $handle = fopen('php://output', 'w');
+
+            // Header CSV
+            fputcsv($handle, [
+                'ID Transaksi', 'Nama Pemesan', 'Item', 'Total', 'Status', 'Tanggal',
+            ]);
+
+            // Isi data
+            foreach ($transaksi as $t) {
+                fputcsv($handle, [
+                    $t->id_transaksi,
+                    $t->nama_pemesan,
+                    $t->item,
+                    $t->total,
+                    $t->status,
+                    $t->tanggal,  // sudah dalam format siap tampil
+                ]);
+            }
+
+            fclose($handle);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

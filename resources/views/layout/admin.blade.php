@@ -24,45 +24,43 @@
                 <p class="text-sm opacity-80">Dashboard Admin</p>
             </div>
 
-            <!-- MENU + LOGOUT WRAPPER -->
+            <!-- MENU WRAPPER -->
             <div class="flex flex-col justify-between h-full">
 
-                <!-- MENU (scrollable) -->
+                <!-- MENU -->
                 <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
 
+                    <!-- Dashboard -->
                     <a href="{{ route('admin.dashboard') }}"
                         class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-600 transition
                         @if(request()->routeIs('admin.dashboard')) bg-green-600 @endif">
                         <i data-lucide="home" class="w-5 h-5"></i> Dashboard
                     </a>
 
+                    <!-- Data Pengguna -->
                     <a href="{{ route('admin.pengguna') }}"
                         class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-600 transition
                         @if(request()->routeIs('admin.pengguna*')) bg-green-600 @endif">
                         <i data-lucide="users" class="w-5 h-5"></i> Data Pengguna
                     </a>
 
+                    <!-- Transaksi -->
                     <a href="{{ route('admin.transaksi') }}"
                         class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-600 transition
                         @if(request()->routeIs('admin.transaksi*')) bg-green-600 @endif">
                         <i data-lucide="shopping-bag" class="w-5 h-5"></i> Transaksi
                     </a>
 
-                    <a href="{{ route('admin.laporan') }}"
+                    <!-- Validasi Pembayaran (Baru) -->
+                    <a href="{{ route('admin.validasi') }}"
                         class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-600 transition
-                        @if(request()->routeIs('admin.laporan')) bg-green-600 @endif">
-                        <i data-lucide="bar-chart-2" class="w-5 h-5"></i> Laporan
-                    </a>
-
-                    <a href="{{ route('admin.monitoring') }}"
-                        class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-green-600 transition
-                        @if(request()->routeIs('admin.monitoring')) bg-green-600 @endif">
-                        <i data-lucide="activity" class="w-5 h-5"></i> Monitoring
+                        @if(request()->routeIs('admin.validasi*')) bg-green-600 @endif">
+                        <i data-lucide="check-circle" class="w-5 h-5"></i> Validasi Pembayaran
                     </a>
 
                 </nav>
 
-                <!-- LOGOUT (selalu di bawah) -->
+                <!-- LOGOUT -->
                 <div class="p-4 border-t border-green-600">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf

@@ -11,13 +11,24 @@ class Pesanan extends Model
 
     protected $table = 'pesanan';
 
+    // protected $fillable = [
+    //     'user_id',
+    //     'id_pedagang',
+    //     'status',
+    //     'total_harga',
+    //     'metode_pembayaran',
+    //     'catatan'
+    // ];
+
     protected $fillable = [
         'user_id',
         'id_pedagang',
         'status',
         'total_harga',
         'metode_pembayaran',
-        'catatan'
+        'catatan',
+        'status_pembayaran',
+        'snap_token'
     ];
 
     public function mahasiswa()

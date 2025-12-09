@@ -140,7 +140,9 @@
                 <label class="block text-sm font-semibold text-gray-700 mb-3">
                     <i class="fas fa-tasks text-blue-600 mr-2"></i>Status Pesanan
                 </label>
-                <select id="statusSelect" name="status" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                <select id="statusSelect" name="status" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="proses">Diproses</option>
                     <option value="siap">Siap Diambil</option>
                     <option value="selesai">Selesai</option>
@@ -148,16 +150,18 @@
                 </select>
             </div>
 
-            <!-- Buttons -->
             <div class="flex gap-3">
-                <button type="button" onclick="closeModal()" class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition-colors">
+                <button type="button" onclick="closeModal()" 
+                    class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition-colors">
                     Batal
                 </button>
-                <button type="submit" class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition-colors flex items-center justify-center gap-2">
-                    <i class="fas fa-check"></i>
-                    Simpan
+
+                <button type="submit" 
+                    class="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition-colors flex items-center justify-center gap-2">
+                    <i class="fas fa-check"></i> Simpan
                 </button>
             </div>
+
         </form>
     </div>
 </div>
@@ -181,12 +185,14 @@
             <form id="formDelete" method="POST" class="flex gap-3">
                 @csrf @method('DELETE')
 
-                <button type="button" onclick="closeDeleteModal()" class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition-colors">
+                <button type="button" onclick="closeDeleteModal()" 
+                    class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 font-semibold transition-colors">
                     Batal
                 </button>
-                <button type="submit" class="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition-colors flex items-center justify-center gap-2">
-                    <i class="fas fa-trash"></i>
-                    Hapus
+
+                <button type="submit" 
+                    class="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition-colors flex items-center justify-center gap-2">
+                    <i class="fas fa-trash"></i> Hapus
                 </button>
             </form>
         </div>
@@ -194,20 +200,30 @@
 </div>
 
 <script>
+    // Utility helpers
     const show = (id) => document.getElementById(id).classList.replace('hidden','flex');
     const hide = (id) => document.getElementById(id).classList.add('hidden');
 
+    // OPEN UPDATE MODAL
     function openModal(id, status){
         show('modalUpdate');
-        document.getElementById('statusSelect').value = status;
+
+        // SET DEFAULT STATUS SESUAI YANG ADA DI DATABASE
+        const select = document.getElementById('statusSelect');
+        select.value = status;
+
+        // Set form action
         document.getElementById('formUpdate').action = "/penjual/pesanan/" + id;
     }
+
     const closeModal = () => hide('modalUpdate');
 
+    // DELETE MODAL
     function openDeleteModal(id){
         show('modalDelete');
         document.getElementById('formDelete').action = "/penjual/pesanan/" + id;
     }
+
     const closeDeleteModal = () => hide('modalDelete');
 </script>
 
